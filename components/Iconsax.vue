@@ -4,23 +4,35 @@
 
 <script lang="ts" setup>
 const props = defineProps({
-  name: String,
+  name: {
+    type: String,
+    required: true
+  },
 });
 
-const icon = shallowRef("");
+const defaultIcon = defineAsyncComponent(() => import('./icons/CloseCircle.vue'));
+const icon = shallowRef(defaultIcon);
 
 watchEffect(() => {
-  icon.value = defineAsyncComponent(
-    () => import(`./icons/${props.name}.vue`)
-  );
+  loadIcon(props.name);
 });
 
 watch(
   () => props.name,
-  () => {
-    icon.value = defineAsyncComponent(
-      () => import(`./icons/${props.name}.vue`)
-    );
+  (newName, oldName) => {
+    if (newName !== oldName) {
+      loadIcon(newName);
+    }
   }
 );
+
+function loadIcon(iconName: string) {
+  icon.value = defineAsyncComponent(
+    () => import(`./icons/${iconName}.vue`)
+      .catch((error) => {
+        console.error(`Failed to load icon ${iconName}:`, error);
+        return import('./icons/CloseCircle.vue');
+      })
+  );
+}
 </script>

@@ -44,31 +44,25 @@ export type Database = {
       }
       rows: {
         Row: {
-          content: string
           created_at: string
-          draft: boolean
+          dev_post_id: string
           id: number
           pos: number
           table_id: number
-          title: string
         }
         Insert: {
-          content: string
           created_at?: string
-          draft: boolean
+          dev_post_id: string
           id?: number
           pos: number
           table_id: number
-          title: string
         }
         Update: {
-          content?: string
           created_at?: string
-          draft?: boolean
+          dev_post_id?: string
           id?: number
           pos?: number
           table_id?: number
-          title?: string
         }
         Relationships: [
           {
