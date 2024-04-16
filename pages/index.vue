@@ -12,7 +12,7 @@
       <div class="search">
         <div class="searchbar">
           <Iconsax name="SearchNormal" size="18" color="#ffffff30" />
-          <input type="text" placeholder="Search for Title or Tag" v-model="search">
+          <input type="text" placeholder="Search Tables for Title or Tag" v-model="search">
         </div>
       </div>
       <div class="table" v-if="tables.length <= 0">
@@ -48,6 +48,10 @@ import type { Database, Tables, Enums } from "~/types/database.types";
 const search = ref("");
 const allTables = ref<Tables<'tables'>[]>([]);
 const tables = ref<Tables<'tables'>[]>([]);
+
+useHead({
+  title: 'Database'
+})
 
 const fetchData = async () => {
   const data: { tables: Tables<'tables'>[] } = await $fetch('/api/tables')

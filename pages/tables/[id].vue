@@ -19,7 +19,7 @@
       <div class="search">
         <div class="searchbar">
           <Iconsax name="SearchNormal" size="18" color="#ffffff30" />
-          <input type="text" placeholder="Search for Name or Tag" v-model="search">
+          <input type="text" placeholder="Search Rows for Name or Tag" v-model="search">
         </div>
       </div>
       <div class="table" v-if="rows.length <= 0">
@@ -52,15 +52,21 @@ import type { Database, Tables, Enums } from "~/types/database.types";
 
 const route = useRoute()
 
+useHead({
+  title: 'Table'
+})
+
 const search = ref("");
 const allRows = ref<Tables<'rows'>[]>([
   {
+    id: 0,
     readable_publish_date: "",
     title: "Loading...",
   }
 ]);
 const rows = ref<Tables<'rows'>[]>([
   {
+    id: 0,
     readable_publish_date: "",
     title: "Loading...",
   }
@@ -68,41 +74,39 @@ const rows = ref<Tables<'rows'>[]>([
 const table = ref<Tables<'tables'>>({ icon: "CloseCircle", id: 0, locked: false, name: "Loading..." });
 
 const fetchData = async () => {
-  const rows: { rows: Tables<'rows'>[] } = await $fetch(`/api/rows/${route.params.id}`)
-  const table: { table: Tables<'tables'> } = await $fetch(`/api/table/${route.params.id}`)
+  const rowsResponse = await $fetch(`/api/rows/${route.params.id}`);
+  const tableResponse = await $fetch(`/api/table/${route.params.id}`);
 
-  console.log(rows);
+  const fetchPromises = rowsResponse!.rows!.map(element =>
+    fetch(`https://dev.to/api/articles/waradu/${element.dev_post_id}`)
+      .then(response => response.json())
+      .then(data => ({
+        ...element,
+        title: data.title,
+        readable_publish_date: data.readable_publish_date
+      }))
+      .catch(error => {
+        console.error("Failed to fetch article data:", error);
+        return element;
+      })
+  );
 
-  const updatedRows = [];
-  for (const element of rows.rows) {
-    try {
-      const response = await fetch(`https://dev.to/api/articles/waradu/${element.dev_post_id}`);
-      const data = await response.json();
-      updatedRows.push({ ...element, title: data.title, readable_publish_date: data.readable_publish_date });
-    } catch (error) {
-      console.error("Failed to fetch article data:", error);
-      updatedRows.push(element);
-    }
-  }
+  const updatedRows = await Promise.all(fetchPromises);
 
-  return { rows: updatedRows, table: table.table };
+  return { rows: updatedRows, table: tableResponse!.table };
 }
 
 onMounted(async () => {
   const data = await fetchData();
   allRows.value = data.rows
   table.value = data.table
+
+  useHead({
+    title: "Table: "+data.table.name
+  })
+
   rows.value = allRows.value;
 });
-
-function formatDate(dateString: string) {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('de-CH', {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric'
-    });
-}
 
 const filterData = () => {
   const searchText = search.value.trim().toLowerCase();
@@ -220,7 +224,8 @@ watchEffect(filterData);
         display: flex;
         gap: 10px;
 
-        .number, .date {
+        .number,
+        .date {
           color: #ffffff30;
         }
 
@@ -265,4 +270,4 @@ watchEffect(filterData);
     }
   }
 }
-</style>
+</style>(: { dev_post_id: any; })(: { tag_id: { name: string; }; })
