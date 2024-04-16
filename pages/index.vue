@@ -8,11 +8,14 @@
             <div class="number">{{ index + 1 }}.</div>
             <div class="name">{{ table.name }}</div>
           </div>
-          <div class="tags">
-            <div v-for="tag in table.table_tag" :key="tag.tag_id.id" class="tag"
-              :style="{ '--color': tag.tag_id.color + '80' }">
-              {{ tag.tag_id.name }}
+          <div class="info">
+            <div class="tags">
+              <div v-for="tag in table.table_tag" :key="tag.tag_id.id" class="tag"
+                :style="{ '--color': tag.tag_id.color + '80' }">
+                {{ tag.tag_id.name }}
+              </div>
             </div>
+            <Iconsax name="Lock" size="18" />
           </div>
         </NuxtLink>
       </div>
@@ -60,6 +63,7 @@ const tables = await fetchData();
     .tables {
       width: 600px;
       padding: 20px;
+      gap: 20px;
       border-radius: 28px;
       border: 1px solid #ffffff20;
       display: flex;
@@ -89,19 +93,25 @@ const tables = await fetchData();
           }
         }
 
-        .tags {
+        .info {
           display: flex;
-          gap: 10px;
+          align-items: center;
+          gap: 20px;
 
-          .tag {
-            opacity: .9;
-            padding: 4px;
-            padding-inline: 10px;
-            font-size: 11px;
-            background-color: var(--color, #00000050);
-            color: white;
-            border-radius: 20px;
-            border: 2px solid var(--color, #00000050);
+          .tags {
+            display: flex;
+            gap: 10px;
+
+            .tag {
+              opacity: .9;
+              padding: 4px;
+              padding-inline: 10px;
+              font-size: 11px;
+              background-color: var(--color, #00000050);
+              color: white;
+              border-radius: 20px;
+              border: 2px solid var(--color, #00000050);
+            }
           }
         }
 

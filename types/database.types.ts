@@ -117,16 +117,19 @@ export type Database = {
         Row: {
           icon: string
           id: number
+          locked: boolean
           name: string
         }
         Insert: {
           icon: string
           id?: number
+          locked?: boolean
           name: string
         }
         Update: {
           icon?: string
           id?: number
+          locked?: boolean
           name?: string
         }
         Relationships: []
