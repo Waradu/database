@@ -74,8 +74,10 @@ const rows = ref<Tables<'rows'>[]>([
 const table = ref<Tables<'tables'>>({ icon: "CloseCircle", id: 0, locked: false, name: "Loading..." });
 
 const fetchData = async () => {
-  const rowsResponse = await $fetch(`/api/rows/${route.params.id}`);
-  const tableResponse = await $fetch(`/api/table/${route.params.id}`);
+  const [rowsResponse, tableResponse] = await Promise.all([
+    $fetch(`/api/rows/${route.params.id}`),
+    $fetch(`/api/table/${route.params.id}`)
+  ]);
 
   const fetchPromises = rowsResponse!.rows!.map(element =>
     fetch(`https://dev.to/api/articles/waradu/${element.dev_post_id}`)
