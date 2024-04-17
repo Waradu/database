@@ -9,4 +9,5 @@ export default defineNuxtConfig({
       include: ['/admin(/*)?'],
     },
   },
+  css: ["prismjs/themes/prism-twilight.css"],
 });

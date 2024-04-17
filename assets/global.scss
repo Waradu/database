@@ -18,3 +18,8 @@ body,
   color: white;
   background-color: #0c0c0c;
 }
+
+pre[class*="language-"] {
+  border: none !important;
+  box-shadow: none !important;
+}
