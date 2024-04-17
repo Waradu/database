@@ -4,6 +4,11 @@
   box-sizing: border-box;
 }
 
+@font-face {
+  font-family: Inter;
+  src: url("~/assets/Inter.woff2") format("woff2");
+}
+
 html,
 body,
 #__nuxt {
@@ -11,8 +16,5 @@ body,
   height: 100%;
   font-family: Inter, sans-serif;
   color: white;
-}
-
-#__nuxt {
   background-color: #0c0c0c;
 }

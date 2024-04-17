@@ -1,5 +1,5 @@
 <template>
-  <div class="index">
+  <div class="index page">
     <header>
       <h1>Waradu's Database</h1>
       <p class="desc">I make programming tutorials about solutions to problems I faced myself. Huge thanks to myself for
@@ -15,22 +15,22 @@
           <input type="text" placeholder="Search Tables for Title or Tag" v-model="search">
         </div>
       </div>
-      <div class="table" v-if="tables.length <= 0">
+      <div class="table" v-if="filteredTables.length <= 0">
         <div class="data">
           <Iconsax name="CloseCircle" size="18" />
           <div class="name">Nothing found</div>
         </div>
       </div>
-      <NuxtLink class="table" v-for="table, index in tables" :key="table.id" :to="`/tables/${table.id}`">
+      <NuxtLink class="table" v-for="table in filteredTables" :key="table.id" :to="`/tables/${table.id}`">
         <div class="data">
           <Iconsax :name="table.icon" color="#ffffff30" size="18" />
           <div class="name">{{ table.name }}</div>
         </div>
         <div class="info">
           <div class="tags">
-            <div v-for="tag in table.table_tag" :key="tag.tag_id.id" class="tag"
-              :style="{ '--color': tag.tag_id.color + '60' }">
-              {{ tag.tag_id.name }}
+            <div v-for="tag in databaseStore.getTableTags(table.id.toString())" :key="tag.id" class="tag"
+              :style="{ '--color': tag.color + '60' }">
+              {{ tag.name }}
             </div>
           </div>
           <div class="icon" title="Finished and Archived" v-if="table.locked">
@@ -43,41 +43,23 @@
 </template>
 
 <script lang="ts" setup>
-import type { Database, Tables, Enums } from "~/types/database.types";
-
 const search = ref("");
-const allTables = ref<Tables<'tables'>[]>([]);
-const tables = ref<Tables<'tables'>[]>([]);
+const databaseStore = useDatabaseStore();
 
 useHead({
-  title: 'Database'
-})
-
-const fetchData = async () => {
-  const data: { tables: Tables<'tables'>[] } = await $fetch('/api/tables')
-
-  return data?.tables || [];
-}
-
-onMounted(async () => {
-  allTables.value = await fetchData();
-  tables.value = allTables.value;
+  title: "Database"
 });
 
-const filterData = () => {
+const filteredTables = computed(() => {
   const searchText = search.value.trim().toLowerCase();
   if (!searchText) {
-    tables.value = allTables.value;
-    return;
+    return Object.values(databaseStore.getTables());
   }
-  tables.value = allTables.value.filter(table =>
+  return Object.values(databaseStore.getTables()).filter(table =>
     table.name.toLowerCase().includes(searchText) ||
-    table.table_tag.some(tag => tag.tag_id.name.toLowerCase().includes(searchText))
+    databaseStore.getTableTags(table.id.toString()).some(tag => tag.name.toLowerCase().includes(searchText))
   );
-};
-
-watchEffect(filterData);
-
+});
 </script>
 
 <style lang="scss">
@@ -103,7 +85,7 @@ watchEffect(filterData);
       grid-column: 1 / 2;
       grid-row: 2 / 3;
       color: #ffffff80;
-      font-weight: 100;
+      font-weight: 200;
     }
 
     .link {

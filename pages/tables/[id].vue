@@ -1,5 +1,5 @@
 <template>
-  <div class="table_id">
+  <div class="table_id page">
     <header>
       <h1>
         <NuxtLink class="link" to="/">
@@ -9,9 +9,9 @@
         {{ table.name }}
       </h1>
       <div class="tags">
-        <div v-for="tag in table.table_tag" :key="tag.tag_id.id" class="tag"
-          :style="{ '--color': tag.tag_id.color + '60' }">
-          {{ tag.tag_id.name }}
+        <div v-for="tag in databaseStore.getTableTags(table.id.toString())" :key="tag.id" class="tag"
+          :style="{ '--color': tag.color + '60' }">
+          {{ tag.name }}
         </div>
       </div>
     </header>
@@ -22,13 +22,13 @@
           <input type="text" placeholder="Search Rows for Name or Tag" v-model="search">
         </div>
       </div>
-      <div class="table" v-if="rows.length <= 0">
+      <div class="table" v-if="filteredRows.length <= 0">
         <div class="data">
           <Iconsax name="CloseCircle" color="#ffffff30" size="18" />
           <div class="name">Nothing found</div>
         </div>
       </div>
-      <NuxtLink class="table" v-for="row, index in rows" :key="row.id" :to="`/rows/${row.id}`">
+      <NuxtLink class="table" v-for="(row, index) in filteredRows" :key="row.id" :to="`/rows/${row.id}`">
         <div class="data">
           <div class="number">{{ index + 1 }}.</div>
           <div class="name">{{ row.title }}</div>
@@ -36,9 +36,9 @@
         </div>
         <div class="info">
           <div class="tags">
-            <div v-for="tag in row.row_tag" :key="tag.tag_id.id" class="tag"
-              :style="{ '--color': tag.tag_id.color + '60' }">
-              {{ tag.tag_id.name }}
+            <div v-for="tag in databaseStore.getRowTags(row.id.toString())" :key="tag.id" class="tag"
+              :style="{ '--color': tag.color + '60' }">
+              {{ tag.name }}
             </div>
           </div>
         </div>
@@ -48,82 +48,30 @@
 </template>
 
 <script lang="ts" setup>
-import type { Database, Tables, Enums } from "~/types/database.types";
-
-const route = useRoute()
-
-useHead({
-  title: 'Table'
-})
-
+const route = useRoute();
 const search = ref("");
-const allRows = ref<Tables<'rows'>[]>([
-  {
-    id: 0,
-    readable_publish_date: "",
-    title: "Loading...",
-  }
-]);
-const rows = ref<Tables<'rows'>[]>([
-  {
-    id: 0,
-    readable_publish_date: "",
-    title: "Loading...",
-  }
-]);
-const table = ref<Tables<'tables'>>({ icon: "CloseCircle", id: 0, locked: false, name: "Loading..." });
+const databaseStore = useDatabaseStore();
 
-const fetchData = async () => {
-  const [rowsResponse, tableResponse] = await Promise.all([
-    $fetch(`/api/rows/${route.params.id}`),
-    $fetch(`/api/table/${route.params.id}`)
-  ]);
-
-  const fetchPromises = rowsResponse!.rows!.map(element =>
-    fetch(`https://dev.to/api/articles/waradu/${element.dev_post_id}`)
-      .then(response => response.json())
-      .then(data => ({
-        ...element,
-        title: data.title,
-        readable_publish_date: data.readable_publish_date
-      }))
-      .catch(error => {
-        console.error("Failed to fetch article data:", error);
-        return element;
-      })
-  );
-
-  const updatedRows = await Promise.all(fetchPromises);
-
-  return { rows: updatedRows, table: tableResponse!.table };
-}
-
-onMounted(async () => {
-  const data = await fetchData();
-  allRows.value = data.rows
-  table.value = data.table
-
-  useHead({
-    title: "Table: "+data.table.name
-  })
-
-  rows.value = allRows.value;
+const tableId = computed(() => route.params.id as string);
+const table = computed(() => {
+  const data = databaseStore.getTable(tableId.value)
+  if (!data) throw new Error('Table not found');
+  return data;
 });
-
-const filterData = () => {
+const filteredRows = computed(() => {
   const searchText = search.value.trim().toLowerCase();
   if (!searchText) {
-    rows.value = allRows.value;
-    return;
+    return databaseStore.getTableRows(tableId.value);
   }
-  rows.value = allRows.value.filter(row =>
+  return databaseStore.getTableRows(tableId.value).filter(row =>
     row.title.toLowerCase().includes(searchText) ||
-    row.row_tag.some(tag => tag.tag_id.name.toLowerCase().includes(searchText))
+    databaseStore.getRowTags(row.id.toString()).some(tag => tag.name.toLowerCase().includes(searchText))
   );
-};
+});
 
-watchEffect(filterData);
-
+useHead({
+  title: `Table: ${table.value?.name || 'Loading...'}`
+});
 </script>
 
 <style lang="scss">
@@ -272,4 +220,4 @@ watchEffect(filterData);
     }
   }
 }
-</style>(: { dev_post_id: any; })(: { tag_id: { name: string; }; })
+</style>

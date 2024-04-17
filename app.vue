@@ -3,6 +3,8 @@
 </template>
 
 <script lang="ts" setup>
+const store = useDatabaseStore();
+await store.fetchData();
 </script>
 
 <style lang="scss">
