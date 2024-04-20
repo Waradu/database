@@ -44,24 +44,27 @@ export type Database = {
       }
       rows: {
         Row: {
-          created_at: string
           dev_post_id: string
           id: number
+          name: string
           pos: number
+          publish_date: string
           table_id: number
         }
         Insert: {
-          created_at?: string
           dev_post_id: string
           id?: number
+          name: string
           pos: number
+          publish_date: string
           table_id: number
         }
         Update: {
-          created_at?: string
           dev_post_id?: string
           id?: number
+          name?: string
           pos?: number
+          publish_date?: string
           table_id?: number
         }
         Relationships: [

@@ -20,9 +20,9 @@ export const useDatabaseStore = defineStore("databaseStore", {
       const supabase: SupabaseClient<Database> = useSupabaseClient<Database>();
 
       await Promise.all([
-        await this.setTables(supabase),
-        await this.setRows(supabase),
-        await this.setTags(supabase),
+        this.setTables(supabase),
+        this.setRows(supabase),
+        this.setTags(supabase),
       ]);
 
       this.fetched = true;
@@ -30,14 +30,10 @@ export const useDatabaseStore = defineStore("databaseStore", {
     async setTables(supabase: SupabaseClient<Database>) {
       if (!supabase) return;
 
-      const tables = await supabase
-        .from("tables")
-        .select("*")
-        .returns<Tables<"tables">[]>();
-      const table_tag = await supabase
-        .from("table_tag")
-        .select("*")
-        .returns<Tables<"table_tag">[]>();
+      const [tables, table_tag] = await Promise.all([
+        supabase.from("tables").select("*").returns<Tables<"tables">[]>(),
+        supabase.from("table_tag").select("*").returns<Tables<"table_tag">[]>(),
+      ]);
 
       if (!tables.data) return;
 
@@ -54,35 +50,19 @@ export const useDatabaseStore = defineStore("databaseStore", {
     async setRows(supabase: SupabaseClient<Database>) {
       if (!supabase) return;
 
-      const rows = await supabase
-        .from("rows")
-        .select("*")
-        .returns<Tables<"rows">[]>();
-      const row_tag = await supabase
-        .from("row_tag")
-        .select("*")
-        .returns<Tables<"row_tag">[]>();
+      const [rows, row_tag] = await Promise.all([
+        supabase
+          .from("rows")
+          .select("*")
+          .order("pos", { ascending: true })
+          .returns<Tables<"rows">[]>(),
+        supabase.from("row_tag").select("*").returns<Tables<"row_tag">[]>(),
+      ]);
 
       if (!rows.data) return;
 
-      const fetchPromises = rows.data.map((element) =>
-        fetch(`https://dev.to/api/articles/waradu/${element.dev_post_id}`)
-          .then((response) => response.json())
-          .then((data) => ({
-            ...element,
-            title: data.title,
-            readable_publish_date: data.readable_publish_date,
-          }))
-          .catch((error) => {
-            console.error("Failed to fetch article data:", error);
-            return element;
-          })
-      );
-
-      const updatedRows = await Promise.all(fetchPromises);
-
       rows.data.forEach((row, index) => {
-        this.rows[row.id] = updatedRows[index] as Tables<"rows"> & RowExtend;
+        this.rows[row.id] = row as Tables<"rows"> & RowExtend;
       });
 
       if (row_tag.data) {
@@ -125,8 +105,10 @@ export const useDatabaseStore = defineStore("databaseStore", {
       return associatedRows;
     },
     getRowTags(rowId: string) {
-      const tagIds = Object.values(this.row_tag).filter(rt => rt.row_id === parseInt(rowId));
-      return tagIds.map(rt => this.tags[rt.tag_id]);
+      const tagIds = Object.values(this.row_tag).filter(
+        (rt) => rt.row_id === parseInt(rowId)
+      );
+      return tagIds.map((rt) => this.tags[rt.tag_id]);
     },
     getRow(rowId: string) {
       if (!this.rows[rowId]) return;
@@ -134,7 +116,9 @@ export const useDatabaseStore = defineStore("databaseStore", {
     },
     async fetchRowContent(rowId: string) {
       if (!this.rows[rowId]) return;
-      const data = await fetch(`https://dev.to/api/articles/waradu/${this.rows[rowId].dev_post_id}`)
+      const data = await fetch(
+        `https://dev.to/api/articles/waradu/${this.rows[rowId].dev_post_id}`
+      );
       const jsondata = await data.json();
       return jsondata.body_html;
     },
