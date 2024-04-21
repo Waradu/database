@@ -1,0 +1,17 @@
+{
+  "theme_color": "#0c0c0c",
+  "background_color": "#0c0c0c",
+  "display": "fullscreen",
+  "scope": "/",
+  "start_url": "/",
+  "short_name": "Database",
+  "description": "Waradu's Database of useful tutorials.",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

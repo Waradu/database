@@ -2,10 +2,10 @@
   <div class="index page">
     <header>
       <h1>Waradu's Database</h1>
-      <p class="desc">I make programming tutorials cuz why not. Huge thanks to myself for
+      <p class="desc">I make mostly programming tutorials cuz why not. Huge thanks to myself for
         making this website.</p>
       <div class="link">
-        <a href="https://waradu.dev" class="website">My Portfolio</a>
+        <NuxtLink to="https://waradu.dev" class="website" @click="updateHref">My Portfolio</NuxtLink>
       </div>
     </header>
     <div class="container">
@@ -60,6 +60,14 @@ const filteredTables = computed(() => {
     databaseStore.getTableTags(table.id.toString()).some(tag => tag.name.toLowerCase().includes(searchText))
   );
 });
+
+const updateHref = (event: MouseEvent) => {
+  if (event.altKey) {
+    event.stopImmediatePropagation()
+    event.preventDefault()
+    navigateTo("/admin")
+  }
+};
 </script>
 
 <style lang="scss">
