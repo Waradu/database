@@ -9,6 +9,32 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      data: {
+        Row: {
+          content: Json
+          id: number
+          row_id: number | null
+        }
+        Insert: {
+          content?: Json
+          id?: number
+          row_id?: number | null
+        }
+        Update: {
+          content?: Json
+          id?: number
+          row_id?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "public_data_row_id_fkey"
+            columns: ["row_id"]
+            isOneToOne: false
+            referencedRelation: "rows"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       row_tag: {
         Row: {
           id: number
@@ -44,7 +70,6 @@ export type Database = {
       }
       rows: {
         Row: {
-          dev_post_id: string
           id: number
           name: string
           pos: number
@@ -52,7 +77,6 @@ export type Database = {
           table_id: number
         }
         Insert: {
-          dev_post_id: string
           id?: number
           name: string
           pos: number
@@ -60,7 +84,6 @@ export type Database = {
           table_id: number
         }
         Update: {
-          dev_post_id?: string
           id?: number
           name?: string
           pos?: number

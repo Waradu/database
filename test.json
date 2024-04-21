@@ -1,0 +1,260 @@
+{
+  "blocks": [
+    {
+      "type": "heading",
+      "data": {
+        "size": 1,
+        "content": "Using SCSS with Nuxt"
+      }
+    },
+    {
+      "type": "paragraph",
+      "data": {
+        "quote": false,
+        "children": [
+          {
+            "content": "To use SCSS with Nuxt, you need to add the",
+            "bold": false,
+            "italic": false,
+            "code": false,
+            "link": ""
+          },
+          {
+            "content": "sass",
+            "bold": false,
+            "italic": false,
+            "code": true,
+            "link": ""
+          },
+          {
+            "content": "package to your project. You can do this by running the following command:",
+            "bold": false,
+            "italic": false,
+            "code": false,
+            "link": ""
+          },
+          {
+            "content": "pnpm add -D sass",
+            "bold": false,
+            "italic": false,
+            "code": true,
+            "link": ""
+          },
+          {
+            "content": "(works completely fine with a",
+            "bold": false,
+            "italic": false,
+            "code": false,
+            "link": ""
+          },
+          {
+            "content": "tauri app",
+            "bold": false,
+            "italic": false,
+            "code": false,
+            "link": "https://tauri.app/"
+          },
+          {
+            "content": ")",
+            "bold": false,
+            "italic": false,
+            "code": false,
+            "link": ""
+          }
+        ]
+      }
+    },
+    {
+      "type": "paragraph",
+      "data": {
+        "quote": false,
+        "children": [
+          {
+            "content": "After adding the package, you can use Sass in your Nuxt project by changing the",
+            "bold": false,
+            "italic": false,
+            "code": false,
+            "link": ""
+          },
+          {
+            "content": "<style>",
+            "bold": false,
+            "italic": false,
+            "code": true,
+            "link": ""
+          },
+          {
+            "content": "tags to",
+            "bold": false,
+            "italic": false,
+            "code": false,
+            "link": ""
+          },
+          {
+            "content": "<style lang=\"scss\">",
+            "bold": false,
+            "italic": false,
+            "code": true,
+            "link": ""
+          },
+          {
+            "content": "tags in all .vue files.",
+            "bold": false,
+            "italic": false,
+            "code": false,
+            "link": ""
+          }
+        ]
+      }
+    },
+    {
+      "type": "heading",
+      "data": {
+        "size": 1,
+        "content": "Using SCSS with HTML in VS Code"
+      }
+    },
+    {
+      "type": "paragraph",
+      "data": {
+        "quote": false,
+        "children": [
+          {
+            "content": "To use SCSS with HTML in VS Code, you need to install the",
+            "bold": false,
+            "italic": false,
+            "code": false,
+            "link": ""
+          },
+          {
+            "content": "glenn2223.live-sass",
+            "bold": false,
+            "italic": false,
+            "code": true,
+            "link": ""
+          },
+          {
+            "content": "extension. After installing the extension, open any",
+            "bold": false,
+            "italic": false,
+            "code": false,
+            "link": ""
+          },
+          {
+            "content": ".scss",
+            "bold": false,
+            "italic": false,
+            "code": true,
+            "link": ""
+          },
+          {
+            "content": "file and click on the",
+            "bold": false,
+            "italic": false,
+            "code": false,
+            "link": ""
+          },
+          {
+            "content": "watch sass",
+            "bold": false,
+            "italic": false,
+            "code": true,
+            "link": ""
+          },
+          {
+            "content": "button at the bottom right of the screen.",
+            "bold": false,
+            "italic": false,
+            "code": false,
+            "link": ""
+          }
+        ]
+      }
+    },
+    {
+      "type": "paragraph",
+      "data": {
+        "quote": false,
+        "children": [
+          {
+            "content": "To import the generated CSS into your HTML file, use the same method as you would for normal CSS. However, make sure to use the",
+            "bold": false,
+            "italic": false,
+            "code": false,
+            "link": ""
+          },
+          {
+            "content": ".css",
+            "bold": false,
+            "italic": false,
+            "code": true,
+            "link": ""
+          },
+          {
+            "content": "file extension instead of",
+            "bold": false,
+            "italic": false,
+            "code": false,
+            "link": ""
+          },
+          {
+            "content": ".scss",
+            "bold": false,
+            "italic": false,
+            "code": true,
+            "link": ""
+          },
+          {
+            "content": ", as",
+            "bold": false,
+            "italic": false,
+            "code": false,
+            "link": ""
+          },
+          {
+            "content": "live-sass",
+            "bold": false,
+            "italic": false,
+            "code": true,
+            "link": ""
+          },
+          {
+            "content": "will convert",
+            "bold": false,
+            "italic": false,
+            "code": false,
+            "link": ""
+          },
+          {
+            "content": ".scss",
+            "bold": false,
+            "italic": false,
+            "code": true,
+            "link": ""
+          },
+          {
+            "content": "files to",
+            "bold": false,
+            "italic": false,
+            "code": false,
+            "link": ""
+          },
+          {
+            "content": ".css",
+            "bold": false,
+            "italic": false,
+            "code": true,
+            "link": ""
+          },
+          {
+            "content": "files.",
+            "bold": false,
+            "italic": false,
+            "code": false,
+            "link": ""
+          }
+        ]
+      }
+    }
+  ]
+}

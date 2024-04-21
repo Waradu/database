@@ -2,7 +2,7 @@
   header {
     display: grid;
     gap: 10px;
-    grid-template-columns: calc(100% - 130px) 120px;
+    grid-template-columns: calc(100% - 150px) 140px;
 
     h1 {
       grid-column: 1 / 2;
@@ -35,11 +35,30 @@
         text-decoration: none;
         color: white;
         cursor: pointer;
-        transition: .2s ease-in-out;
+        transition: 0.2s ease-in-out;
+        width: 100%;
+        text-align: center;
 
         &:hover {
           background-color: #ffffff30;
           border: 1px solid #ffffff30;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 900px) {
+  .index {
+    header {
+      grid-template-columns: 100%;
+
+      .link {
+        grid-column: 1 / 2;
+        grid-row: 3 / 4;
+        
+        .website {
+          padding: 10px;
         }
       }
     }

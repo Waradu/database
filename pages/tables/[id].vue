@@ -2,15 +2,17 @@
   <div class="table_id page">
     <header class="default">
       <h1>
-        <NuxtLink class="link" to="/">
-          <Iconsax name="ArrowLeft" size="18" color="#ffffff80" />
-        </NuxtLink>
-        <Iconsax :name="table.icon" size="28" />
-        {{ table.name }}
+        <div class="header-wrapper">
+          <NuxtLink class="link" to="/">
+            <Iconsax name="ArrowLeft" size="18" color="#ffffff80" />
+          </NuxtLink>
+          <Iconsax :name="table.icon" size="28" />
+        </div>
+        <div class="header-text">{{ table.name }}</div>
       </h1>
       <div class="tags">
         <div v-for="tag in databaseStore.getTableTags(table.id.toString())" :key="tag.id" class="tag"
-          :style="{ '--color': tag.color + '60' }">
+          :style="{ '--color': tag.color + '50', '--full-color': tag.color + '80' }">
           {{ tag.name }}
         </div>
       </div>
@@ -37,7 +39,7 @@
         <div class="info">
           <div class="tags">
             <div v-for="tag in databaseStore.getRowTags(row.id.toString())" :key="tag.id" class="tag"
-              :style="{ '--color': tag.color + '60' }">
+              :style="{ '--color': tag.color + '50', '--full-color': tag.color + '80' }">
               {{ tag.name }}
             </div>
           </div>

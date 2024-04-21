@@ -29,7 +29,7 @@
         <div class="info">
           <div class="tags">
             <div v-for="tag in databaseStore.getTableTags(table.id.toString())" :key="tag.id" class="tag"
-              :style="{ '--color': tag.color + '60' }">
+              :style="{ '--color': tag.color + '50', '--full-color': tag.color + '80' }">
               {{ tag.name }}
             </div>
           </div>

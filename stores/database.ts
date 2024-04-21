@@ -1,5 +1,5 @@
 import type { Database, Tables } from "~/types/database.types";
-import type { DatabaseStore, RowExtend } from "~/types/types";
+import type { Block, DataTable, DatabaseStore, RowExtend } from "~/types/types";
 import { SupabaseClient } from "@supabase/supabase-js";
 
 export const useDatabaseStore = defineStore("databaseStore", {
@@ -63,6 +63,7 @@ export const useDatabaseStore = defineStore("databaseStore", {
 
       rows.data.forEach((row, index) => {
         this.rows[row.id] = row as Tables<"rows"> & RowExtend;
+        this.rows[row.id].blocks = [];
       });
 
       if (row_tag.data) {
@@ -115,12 +116,25 @@ export const useDatabaseStore = defineStore("databaseStore", {
       return this.rows[rowId];
     },
     async fetchRowContent(rowId: string) {
-      if (!this.rows[rowId]) return;
-      const data = await fetch(
-        `https://dev.to/api/articles/waradu/${this.rows[rowId].dev_post_id}`
-      );
-      const jsondata = await data.json();
-      return jsondata.body_html;
+      if (!this.rows[rowId]) return [] as Block[];
+
+      if (this.rows[rowId].blocks.length > 0) return this.rows[rowId].blocks;
+
+      const supabase = useSupabaseClient<Database>();
+
+      const article = await supabase
+        .from("data")
+        .select("*")
+        .eq("row_id", rowId)
+        .returns<DataTable[]>()
+        .single();
+
+      if (!article.data) return [] as Block[];
+      if (!article.data.content) return [] as Block[];
+
+      this.rows[rowId].blocks = article.data.content.blocks;
+
+      return this.rows[rowId].blocks;
     },
   },
 });

@@ -1,14 +1,27 @@
-@import url('pages.scss');
+@import url("~/assets/pages.scss");
+@import url("~/assets/article.scss");
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+@font-face {
+  font-family: "Inter";
+  src: url("~/assets/Inter.woff2") format("woff2");
 }
 
 @font-face {
-  font-family: Inter;
-  src: url("~/assets/Inter.woff2") format("woff2");
+  font-family: "CommitMono";
+  font-display: swap;
+  src: url("~/assets/CommitMono.woff2") format("woff2");
+}
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "CommitMono", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  word-spacing: -2px;
 }
 
 html,
@@ -16,12 +29,28 @@ body,
 #__nuxt {
   width: 100%;
   height: 100%;
-  font-family: Inter, sans-serif;
   color: white;
   background-color: #0c0c0c;
+  overflow: hidden;
 }
 
 pre[class*="language-"] {
   border: none !important;
   box-shadow: none !important;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #fff;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #fff;
 }

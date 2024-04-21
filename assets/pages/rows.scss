@@ -1,13 +1,4 @@
 .row {
-  .container {
-    padding: 40px;
-    align-items: center;
-
-    .html-content {
-      width: 60%;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-  }
+  overflow: hidden;
+  overflow-y: auto;
 }
