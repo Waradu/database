@@ -2,7 +2,7 @@
   <div class="index page">
     <header>
       <h1>Waradu's Database</h1>
-      <p class="desc">I make programming tutorials about solutions to problems I faced myself. Huge thanks to myself for
+      <p class="desc">I make programming tutorials cuz why not. Huge thanks to myself for
         making this website.</p>
       <div class="link">
         <a href="https://waradu.dev" class="website">My Portfolio</a>
