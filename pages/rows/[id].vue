@@ -4,7 +4,7 @@
       <h1>
         <div class="header-wrapper">
           <NuxtLink class="link" :to="'/tables/' + row.table_id">
-            <Iconsax name="ArrowLeft" size="18" color="#ffffff80" />
+            <Iconsax name="ArrowLeft" size="18" color="#ffffff80" thickness="2" />
           </NuxtLink>
           <div class="number">{{ row.pos }}.</div>
         </div>

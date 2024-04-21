@@ -4,7 +4,7 @@
       <h1>
         <div class="header-wrapper">
           <NuxtLink class="link" to="/">
-            <Iconsax name="ArrowLeft" size="18" color="#ffffff80" />
+            <Iconsax name="ArrowLeft" size="18" color="#ffffff80" thickness="2" />
           </NuxtLink>
           <Iconsax :name="table.icon" size="28" />
         </div>
