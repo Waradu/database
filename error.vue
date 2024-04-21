@@ -49,7 +49,7 @@ const handleError = () => clearError({ redirect: "/" });
       display: flex;
       align-items: end;
       gap: 20px;
-      line-height: .7;
+      line-height: 0.7;
 
       h2 {
         font-size: 60px;
@@ -67,7 +67,7 @@ const handleError = () => clearError({ redirect: "/" });
       padding-inline: 10px;
       border-radius: 12px;
       border: none;
-      transition: .2s ease-in-out;
+      transition: 0.2s ease-in-out;
       background-image: linear-gradient(to bottom, #d2d0d0, #797979);
       box-shadow: 0px 3px 2px inset #ffffff, 0px -3px 2px inset #3a3a3a;
       border: 0px solid #3a3a3a;
@@ -77,6 +77,7 @@ const handleError = () => clearError({ redirect: "/" });
       letter-spacing: -1px;
       word-spacing: 1px;
       user-select: none;
+      color: #000;
     }
   }
 }
