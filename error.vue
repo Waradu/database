@@ -68,16 +68,22 @@ const handleError = () => clearError({ redirect: "/" });
       border-radius: 12px;
       border: none;
       transition: 0.2s ease-in-out;
-      background-image: linear-gradient(to bottom, #d2d0d0, #797979);
-      box-shadow: 0px 3px 2px inset #ffffff, 0px -3px 2px inset #3a3a3a;
-      border: 0px solid #3a3a3a;
       cursor: pointer;
       font-weight: bold;
       font-size: 18px;
       letter-spacing: -1px;
       word-spacing: 1px;
       user-select: none;
-      color: #000;
+      border: 1px solid #ffffff10;
+      background-color: transparent;
+      outline: none;
+      color: #ffffffbb;
+
+      &:hover {
+        border: 1px solid #ffffff20;
+        background-color: #ffffff05;
+        color: #ffffffff;
+      }
     }
   }
 }
