@@ -7,7 +7,15 @@
         <div class="color">Color</div>
         <div class="actions">Actions</div>
       </div>
-      <div class="data" v-for="tag in tags">
+      <div class="data" v-if="Object.keys(Object.values(tags).filter(tag => tag.name.toLowerCase().includes(term.toLowerCase()))).length === 0">
+        <div class="id">404</div>
+        <div class="name">Nothing found</div>
+        <div class="color">
+        </div>
+        <div class="actions">
+        </div>
+      </div>
+      <div class="data" v-for="tag in Object.values(tags).filter(tag => tag.name.toLowerCase().includes(term.toLowerCase()))">
         <div class="id">{{ tag.id }}</div>
         <div class="name">{{ tag.name }}</div>
         <div class="color">
@@ -26,11 +34,11 @@
     </div>
     <div
       class="overlay"
-      @click="selected_tag.id = 0"
+      @click="reset"
       :class="{ hidden: selected_tag.id == 0 }"
     >
-      <div class="overlay-inner" @click.stop>
-        <h1>Edit Tag</h1>
+      <form @submit.prevent="save" class="overlay-inner" @click.stop>
+        <h1>Tag</h1>
         <div class="input name">
           <label for="name">Name:</label>
           <input
@@ -38,20 +46,30 @@
             name="name"
             id="name"
             v-model="selected_tag.name"
+            required
           />
         </div>
         <div class="input color">
           <label for="color">Color:</label>
-          <input
-            type="text"
-            name="color"
-            id="color"
-            v-model="selected_tag.color"
-          />
+          <div class="color-wrapper">
+            <input
+              type="text"
+              name="color"
+              id="color"
+              pattern="^#([0-9A-Fa-f]{6})$"
+              v-model="selected_tag.color"
+              required
+            />
+            <div
+              class="tag-color"
+              :style="{ '--color': selected_tag.color }"
+            ></div>
+          </div>
         </div>
         <div class="space"></div>
-        <button class="save" @click="save">Save</button>
-      </div>
+        <div class="error">{{ error_message }}</div>
+        <button class="save" type="submit">Save</button>
+      </form>
     </div>
   </div>
 </template>
@@ -60,13 +78,23 @@
 import type { Database, Tables } from "~/types/database.types";
 
 const databaseStore = useDatabaseStore();
-const tags = ref(databaseStore.getTags())
+const error_message = ref("");
+const term = ref("");
+const tags = ref(databaseStore.getTags());
 const supabase = useSupabaseClient<Database>();
 const selected_tag = ref<Tables<"tags">>({
   id: 0,
   name: "",
   color: "",
 });
+
+function reset() {
+  selected_tag.value = {
+    id: 0,
+    name: "",
+    color: "",
+  };
+}
 
 function edit(tag_id: number) {
   const tag = databaseStore.getTag(tag_id.toString());
@@ -78,23 +106,76 @@ function edit(tag_id: number) {
   selected_tag.value.color = tag.color;
 }
 
-function delete_item(tag_id: number) {}
+async function delete_item(tag_id: number) {
+  const shouldDelete = confirm("Are you sure?");
+
+  if (shouldDelete) {
+    const { data, error } = await supabase.from("tags").delete().eq("id", tag_id);
+
+    if (error) {
+      console.log(error);
+      error_message.value = error.message;
+      return;
+    }
+
+    await databaseStore.setTags()
+    tags.value = databaseStore.getTags();
+
+    reset();
+  }
+}
 
 async function save() {
   if (selected_tag.value.id == 0) return;
+
+  if (selected_tag.value.id == -1) {
+    const { data, error } = await supabase.from("tags").insert({
+      name: selected_tag.value.name,
+      color: selected_tag.value.color,
+    });
+
+    if (error) {
+      console.log(error);
+      error_message.value = error.message;
+      reset();
+      return;
+    }
+
+    await databaseStore.setTags();
+    tags.value = databaseStore.getTags();
+
+    reset();
+
+    return;
+  }
+
   const { data, error } = await supabase
     .from("tags")
     .update({ name: selected_tag.value.name, color: selected_tag.value.color })
     .eq("id", selected_tag.value.id);
   if (error) {
     console.log(error);
+    error_message.value = error.message;
+    reset();
     return;
   }
-  databaseStore.tags[selected_tag.value.id].name = selected_tag.value.name;
-  databaseStore.tags[selected_tag.value.id].color = selected_tag.value.color;
-  tags.value = databaseStore.getTags()
-  selected_tag.value.id = 0;
+
+  await databaseStore.setTags();
+  tags.value = databaseStore.getTags();
+  reset();
 }
+
+const createAction = inject("createAction") as Ref<() => void>;
+
+createAction.value = () => {
+  selected_tag.value.id = -1;
+};
+
+const searchAction = inject("searchAction") as Ref<(term: string) => void>;
+
+searchAction.value = (search_term: string) => {
+  term.value = search_term
+};
 
 definePageMeta({
   layout: "admin",
@@ -143,6 +224,7 @@ definePageMeta({
       }
 
       &:not(.header) {
+        height: 55px;
         border-top: 1px solid #ffffff00;
         border-bottom: 1px solid #ffffff00;
       }
@@ -173,6 +255,7 @@ definePageMeta({
       height: 25px;
       border-radius: 4px;
       background-color: var(--color, #ffffff);
+      border: 1px solid #444;
     }
 
     .actions {
@@ -222,13 +305,29 @@ definePageMeta({
       right: 0;
       top: 0;
       bottom: 0;
-      width: 400px;
+      width: 500px;
       border-left: 1px solid #ffffff20;
       box-shadow: 0 0 20px black;
       display: flex;
       flex-direction: column;
-      padding: 20px;
+      padding: 40px;
       gap: 20px;
+
+      .color-wrapper {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+      }
+
+      .tag-color {
+        min-width: 35px;
+        width: 35px;
+        min-height: 35px;
+        height: 35px;
+        border-radius: 4px;
+        background-color: var(--color, #ffffff);
+        border: 1px solid #444;
+      }
 
       .input {
         display: flex;
@@ -236,6 +335,7 @@ definePageMeta({
         gap: 5px;
 
         input {
+          width: 100%;
           background-color: #0c0c0c;
           padding: 10px;
           border: none;
@@ -257,6 +357,10 @@ definePageMeta({
 
       .space {
         height: 100%;
+      }
+
+      .error {
+        color: #ff6666aa;
       }
 
       .save {

@@ -12,14 +12,20 @@
       <button class="logout" @click="logout">Logout</button>
     </div>
     <header>
-      <input type="text" name="" id="" placeholder="Search" />
-      <button class="preview" @click="show_preview = true">
-        <Iconsax class="icon" name="Eye" size="16px" thickness="2" />
-        Preview
-      </button>
+      <input type="text" name="" id="" placeholder="Search" @input="searchAction(term)" v-model="term" />
+      <div class="buttons">
+        <button class="preview" @click="show_preview = true">
+          <Iconsax class="icon" name="Eye" size="16px" thickness="2" />
+          Preview
+        </button>
+        <button class="create" @click="createAction">
+          <Iconsax class="icon" name="Add" size="16px" thickness="2" />
+          Create new
+        </button>
+      </div>
     </header>
     <div class="main">
-      <slot />
+      <slot :create="createAction" :search="searchAction" />
     </div>
     <div :class="{ 'hidden': !show_preview }" class="wrapper" @click="show_preview = false">
       <div @click.stop class="iframe-toolbar">
@@ -52,6 +58,7 @@ const active = ref(4);
 const iframe = ref<HTMLIFrameElement>();
 const router = useRouter();
 const route = useRoute();
+const term = ref("")
 const supabase = useSupabaseClient();
 
 function setInitialActiveTab() {
@@ -77,6 +84,18 @@ function home() {
   if (!iframe.value) return;
   iframe.value.src = "/";
 }
+
+const createAction = ref(() => {
+  console.error('Call error');
+});
+
+provide('createAction', createAction);
+
+const searchAction = ref((term: string) => {
+  console.error('Call error');
+});
+
+provide('searchAction', searchAction);
 
 function submit(event: Event) {
   if (!iframe.value) return;

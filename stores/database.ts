@@ -20,15 +20,15 @@ export const useDatabaseStore = defineStore("databaseStore", {
       const supabase: SupabaseClient<Database> = useSupabaseClient<Database>();
 
       await Promise.all([
-        this.setTables(supabase),
-        this.setRows(supabase),
-        this.setTags(supabase),
+        this.setTables(),
+        this.setRows(),
+        this.setTags(),
       ]);
 
       this.fetched = true;
     },
-    async setTables(supabase: SupabaseClient<Database>) {
-      if (!supabase) return;
+    async setTables() {
+      const supabase: SupabaseClient<Database> = useSupabaseClient<Database>();
 
       const [tables, table_tag] = await Promise.all([
         supabase.from("tables").select("*").returns<Tables<"tables">[]>(),
@@ -47,8 +47,8 @@ export const useDatabaseStore = defineStore("databaseStore", {
         });
       }
     },
-    async setRows(supabase: SupabaseClient<Database>) {
-      if (!supabase) return;
+    async setRows() {
+      const supabase: SupabaseClient<Database> = useSupabaseClient<Database>();
 
       const [rows, row_tag] = await Promise.all([
         supabase
@@ -72,8 +72,8 @@ export const useDatabaseStore = defineStore("databaseStore", {
         });
       }
     },
-    async setTags(supabase: SupabaseClient<Database>) {
-      if (!supabase) return;
+    async setTags() {
+      const supabase: SupabaseClient<Database> = useSupabaseClient<Database>();
 
       const tags = await supabase
         .from("tags")
@@ -81,6 +81,8 @@ export const useDatabaseStore = defineStore("databaseStore", {
         .returns<Tables<"tags">[]>();
 
       if (!tags.data) return;
+
+      this.tags = {}
 
       tags.data.forEach((tag) => {
         this.tags[tag.id] = tag;

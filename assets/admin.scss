@@ -34,7 +34,7 @@
         display: flex;
         gap: 10px;
         align-items: center;
-  
+
         input {
           background-color: #0c0c0c;
           padding: 6px;
@@ -46,7 +46,7 @@
           border: 1px solid #282828;
           color: #ffffffbb;
           transition: 0.2s ease-in-out;
-  
+
           &:hover,
           &:focus {
             border: 1px solid #2f2f2f;
@@ -54,7 +54,7 @@
             color: #ffffffff;
           }
         }
-  
+
         button {
           background-color: #0c0c0c;
           padding: 6px;
@@ -64,7 +64,7 @@
           border: 1px solid #282828;
           color: #ffffffbb;
           transition: 0.2s ease-in-out;
-  
+
           &:hover {
             border: 1px solid #2f2f2f;
             background-color: #121212;
@@ -72,18 +72,17 @@
           }
         }
       }
-  
+
       .actions {
         display: flex;
         gap: 20px;
-        opacity: .8;
-  
+        opacity: 0.8;
+
         .action {
           cursor: pointer;
         }
       }
     }
-
 
     .iframe-wrapper {
       position: relative;
@@ -106,11 +105,11 @@
       pointer-events: none;
 
       .iframe-wrapper {
-        scale: .98;
+        scale: 0.98;
       }
 
       .iframe-toolbar {
-        scale: .98;
+        scale: 0.98;
       }
     }
   }
@@ -209,22 +208,27 @@
       }
     }
 
-    button {
+    .buttons {
       display: flex;
-      align-items: center;
-      padding-inline: 15px;
       gap: 10px;
-      background-color: #0c0c0c;
-      border: 1px solid #ffffff20;
-      border-radius: 6px;
-      color: #ffffffbb;
-      transition: 0.2s ease-in-out;
-      cursor: pointer;
 
-      &:hover {
-        border: 1px solid #ffffff30;
-        background-color: #ffffff10;
-        color: #ffffffff;
+      button {
+        display: flex;
+        align-items: center;
+        padding-inline: 15px;
+        gap: 10px;
+        background-color: #0c0c0c;
+        border: 1px solid #ffffff20;
+        border-radius: 6px;
+        color: #ffffffbb;
+        transition: 0.2s ease-in-out;
+        cursor: pointer;
+
+        &:hover {
+          border: 1px solid #ffffff30;
+          background-color: #ffffff10;
+          color: #ffffffff;
+        }
       }
     }
   }
