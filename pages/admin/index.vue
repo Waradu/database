@@ -1,6 +1,6 @@
 <template>
-  <div>
-    
+  <div class="admin_index">
+    Index
   </div>
 </template>
 

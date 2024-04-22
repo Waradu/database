@@ -1,7 +1,7 @@
 .admin {
   display: grid;
-  grid-template-columns: 300px calc(100% - 300px);
-  grid-template-rows: 50px calc(100% - 50px);
+  grid-template-columns: 250px calc(100% - 250px);
+  grid-template-rows: 60px calc(100% - 60px);
   width: 100%;
   height: 100%;
 
@@ -14,64 +14,86 @@
     transition: 0.2s;
     opacity: 1;
     pointer-events: all;
+    display: flex;
+    gap: 20px;
+    flex-direction: column;
+
+    .iframe-toolbar {
+      border: 1px solid #282828;
+      box-shadow: 0 0 20px black;
+      background-color: #0c0c0c;
+      padding: 20px;
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      align-items: center;
+      border-radius: 12px;
+      transition: 0.2s ease-in-out;
+
+      form {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+  
+        input {
+          background-color: #0c0c0c;
+          padding: 6px;
+          border: none;
+          border-radius: 4px;
+          outline: none;
+          padding-inline: 8px;
+          border-radius: 4px;
+          border: 1px solid #282828;
+          color: #ffffffbb;
+          transition: 0.2s ease-in-out;
+  
+          &:hover,
+          &:focus {
+            border: 1px solid #2f2f2f;
+            background-color: #121212;
+            color: #ffffffff;
+          }
+        }
+  
+        button {
+          background-color: #0c0c0c;
+          padding: 6px;
+          font-size: 12px;
+          border-radius: 4px;
+          padding-inline: 12px;
+          border: 1px solid #282828;
+          color: #ffffffbb;
+          transition: 0.2s ease-in-out;
+  
+          &:hover {
+            border: 1px solid #2f2f2f;
+            background-color: #121212;
+            color: #ffffffff;
+          }
+        }
+      }
+  
+      .actions {
+        display: flex;
+        gap: 20px;
+        opacity: .8;
+  
+        .action {
+          cursor: pointer;
+        }
+      }
+    }
+
 
     .iframe-wrapper {
       position: relative;
       width: 100%;
       height: 100%;
       border-radius: 12px;
-      overflow: hidden;
       border: 1px solid #282828;
       box-shadow: 0 0 20px black;
       transition: 0.2s ease-in-out;
-      scale: 1.02;
-
-      form {
-        position: absolute;
-        left: 20px;
-        top: 20px;
-        display: flex;
-        gap: 10px;
-        align-items: center;
-
-        input {
-          background-color: #0c0c0c;
-          padding: 2px;
-          border: none;
-          color: white;
-          border-radius: 4px;
-          outline: none;
-        }
-
-        button {
-          background-color: #0c0c0c;
-          padding: 4px;
-          font-size: 12px;
-          border-radius: 4px;
-          padding-inline: 8px;
-          border: 1px solid #ffffff10;
-          color: #ffffffbb;
-          transition: 0.2s ease-in-out;
-
-          &:hover {
-            border: 1px solid #ffffff20;
-            background-color: #ffffff05;
-            color: #ffffffff;
-          }
-        }
-      }
-
-      .actions {
-        position: absolute;
-        right: 20px;
-        top: 20px;
-        display: flex;
-        gap: 20px;
-
-        .action {
-          cursor: pointer;
-        }
-      }
+      overflow: hidden;
 
       .preview {
         width: 100%;
@@ -84,7 +106,11 @@
       pointer-events: none;
 
       .iframe-wrapper {
-        scale: 1;
+        scale: .98;
+      }
+
+      .iframe-toolbar {
+        scale: .98;
       }
     }
   }
@@ -94,7 +120,7 @@
     grid-row: 1 / 3;
     width: 100%;
     height: 100%;
-    border-right: 1px solid #ffffff10;
+    border-right: 1px solid #ffffff20;
     display: flex;
     flex-direction: column;
 
@@ -107,6 +133,7 @@
     .tabs {
       display: flex;
       flex-direction: column;
+      user-select: none;
 
       .tab {
         display: flex;
@@ -115,15 +142,20 @@
         padding-inline: 20px;
         color: #ffffff80;
         align-items: center;
-        transition: .2s ease-in-out;
+        transition: 0.2s ease-in-out;
+        cursor: pointer;
+        border-top: 1px solid #ffffff00;
+        border-bottom: 1px solid #ffffff00;
 
         &.active {
           color: #ffffffff;
         }
 
         &:hover {
-          background-color: #ffffff05;
+          background-color: #ffffff10;
           color: #ffffffff;
+          border-top: 1px solid #ffffff10;
+          border-bottom: 1px solid #ffffff10;
         }
       }
     }
@@ -138,14 +170,15 @@
       padding-inline: 15px;
       gap: 10px;
       background-color: #0c0c0c;
-      border: 1px solid #ffffff10;
+      border: 1px solid #ffffff20;
       border-radius: 6px;
       color: #ffffffbb;
       transition: 0.2s ease-in-out;
+      cursor: pointer;
 
       &:hover {
-        border: 1px solid #ffffff20;
-        background-color: #ffffff05;
+        border: 1px solid #ffffff30;
+        background-color: #ffffff10;
         color: #ffffffff;
       }
     }
@@ -154,15 +187,15 @@
   header {
     grid-column: 2 / 3;
     grid-row: 1 / 2;
-    border-bottom: 1px solid #ffffff10;
+    border-bottom: 1px solid #ffffff20;
     display: flex;
-    padding: 10px;
+    padding: 12px;
     justify-content: space-between;
 
     input {
       padding-inline: 10px;
       background-color: #0c0c0c;
-      border: 1px solid #ffffff10;
+      border: 1px solid #ffffff20;
       border-radius: 6px;
       color: #ffffffbb;
       transition: 0.2s ease-in-out;
@@ -170,8 +203,8 @@
 
       &:hover,
       &:focus {
-        border: 1px solid #ffffff20;
-        background-color: #ffffff05;
+        border: 1px solid #ffffff30;
+        background-color: #ffffff10;
         color: #ffffffff;
       }
     }
@@ -182,14 +215,15 @@
       padding-inline: 15px;
       gap: 10px;
       background-color: #0c0c0c;
-      border: 1px solid #ffffff10;
+      border: 1px solid #ffffff20;
       border-radius: 6px;
       color: #ffffffbb;
       transition: 0.2s ease-in-out;
+      cursor: pointer;
 
       &:hover {
-        border: 1px solid #ffffff20;
-        background-color: #ffffff05;
+        border: 1px solid #ffffff30;
+        background-color: #ffffff10;
         color: #ffffffff;
       }
     }

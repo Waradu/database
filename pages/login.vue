@@ -37,7 +37,7 @@ const password = ref("");
 const showPassword = ref(false);
 const error_message = ref("");
 const supabase = useSupabaseClient();
-const user = useSupabaseUser()
+const user = useSupabaseUser();
 
 const togglePasswordVisibility = () => {
   showPassword.value = !showPassword.value;
@@ -58,11 +58,15 @@ useHead({
   title: "Admin Panel",
 });
 
-watch(user, () => {
-  if (user.value) {
-    return navigateTo('/admin')
-  }
-}, { immediate: true })
+watch(
+  user,
+  () => {
+    if (user.value) {
+      return navigateTo("/admin");
+    }
+  },
+  { immediate: true }
+);
 </script>
 
 <style>
@@ -100,10 +104,16 @@ watch(user, () => {
       letter-spacing: -1px;
       word-spacing: 1px;
       user-select: none;
-      border: 1px solid #ffffff10;
+      border: 1px solid #ffffff20;
       background-color: transparent;
       outline: none;
       color: #ffffffbb;
+
+      &:hover, &:focus {
+        border: 1px solid #ffffff20;
+        background-color: #ffffff10;
+        color: #ffffffff;
+      }
     }
 
     .password {
@@ -139,14 +149,14 @@ watch(user, () => {
         letter-spacing: -1px;
         word-spacing: 1px;
         user-select: none;
-        border: 1px solid #ffffff10;
+        border: 1px solid #ffffff20;
         background-color: transparent;
         outline: none;
         color: #ffffffbb;
 
         &:hover {
           border: 1px solid #ffffff20;
-          background-color: #ffffff05;
+          background-color: #ffffff10;
           color: #ffffffff;
         }
       }

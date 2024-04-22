@@ -4,7 +4,7 @@
       <h1>Waradu's Database</h1>
       <p class="desc">I make mostly programming tutorials cuz why not. Huge thanks to myself for
         making this website.</p>
-      <div class="link">
+      <div class="link" v-if="show_portfolio">
         <NuxtLink to="https://waradu.dev" class="website" @click="updateHref">My Portfolio</NuxtLink>
       </div>
     </header>
@@ -45,6 +45,11 @@
 <script lang="ts" setup>
 const search = ref("");
 const databaseStore = useDatabaseStore();
+const show_portfolio = ref(true)
+
+onMounted(() => {
+  show_portfolio.value = !window.top?.location.pathname.startsWith("/admin")
+}),
 
 useHead({
   title: "Database"

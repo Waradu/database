@@ -1,6 +1,6 @@
 <template>
-  <div>
-    
+  <div class="admin_tables">
+    Tables
   </div>
 </template>
 

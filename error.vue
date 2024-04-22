@@ -81,7 +81,7 @@ const handleError = () => clearError({ redirect: "/" });
 
       &:hover {
         border: 1px solid #ffffff20;
-        background-color: #ffffff05;
+        background-color: #ffffff10;
         color: #ffffffff;
       }
     }

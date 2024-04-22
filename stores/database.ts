@@ -86,6 +86,13 @@ export const useDatabaseStore = defineStore("databaseStore", {
         this.tags[tag.id] = tag;
       });
     },
+    getTags() {
+      return this.tags;
+    },
+    getTag(tagId: string) {
+      if (!this.tags[tagId]) return;
+      return this.tags[tagId];
+    },
     getTables() {
       return this.tables;
     },
