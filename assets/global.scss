@@ -54,3 +54,9 @@ pre[class*="language-"] {
 ::-webkit-scrollbar-thumb:hover {
   background: #fff;
 }
+
+input[type=password]::-ms-reveal,
+input[type=password]::-ms-clear
+{
+    display: none;
+}

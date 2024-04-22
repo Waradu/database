@@ -117,5 +117,6 @@ useHead({
 </script>
 
 <style>
-@import url("~/assets/admin.scss");
+@import url("~/assets/admin/layout.scss");
+@import url("~/assets/admin/global.scss");
 </style>
