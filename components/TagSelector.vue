@@ -75,11 +75,11 @@ const handleClickOutside = (event) => {
 }
 
 onMounted(() => {
-  document.addEventListener('click', handleClickOutside);
+  document.addEventListener('mouseup', handleClickOutside);
 });
 
 onUnmounted(() => {
-  document.removeEventListener('click', handleClickOutside);
+  document.removeEventListener('mouseup', handleClickOutside);
 });
 </script>
 

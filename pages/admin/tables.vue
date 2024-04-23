@@ -80,7 +80,7 @@
           <TagSelector
             v-model="selected.tags"
             :tags="availableTags"
-            :size="parseInt('3')"
+            :size="3"
           />
         </div>
         <div class="checkbox locked">
@@ -210,6 +210,7 @@ async function save() {
   await saveTags()
 
   await databaseStore.setTables();
+  await databaseStore.setTags();
   tables.value = databaseStore.getTables();
   reset();
 }
