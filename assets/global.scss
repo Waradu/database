@@ -40,7 +40,7 @@ pre[class*="language-"] {
 }
 
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
 }
 
 ::-webkit-scrollbar-track {
@@ -48,11 +48,11 @@ pre[class*="language-"] {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #fff;
+  background: #777777;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #fff;
+  background: #999999;
 }
 
 input[type=password]::-ms-reveal,

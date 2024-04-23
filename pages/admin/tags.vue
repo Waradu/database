@@ -63,7 +63,7 @@
         </div>
         <div class="input color">
           <label for="color">Color:</label>
-          <div class="color-wrapper">
+          <div class="selected-wrapper">
             <input
               type="text"
               name="color"
@@ -201,39 +201,33 @@ definePageMeta({
 .admin-tags {
   .data-table {
     .data {
-      grid-template-columns: 50px calc(100% - 320px) 120px 150px;
+      grid-template-columns: 50px calc(100% - 280px) 120px 100px;
     }
 
     .color {
-        display: flex;
-        gap: 20px;
-        align-items: center;
-      }
-  
-      .tag-color {
-        width: 25px;
-        height: 25px;
-        border-radius: 4px;
-        background-color: var(--color, #ffffff);
-        border: 1px solid #444;
-      }
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+
+    .tag-color {
+      width: 25px;
+      height: 25px;
+      border-radius: 4px;
+      background-color: var(--color, #ffffff);
+      border: 1px solid #444;
+    }
   }
   .overlay {
-    .color-wrapper {
-        display: flex;
-        gap: 10px;
-        align-items: center;
-      }
-
-      .tag-color {
-        min-width: 35px;
-        width: 35px;
-        min-height: 35px;
-        height: 35px;
-        border-radius: 4px;
-        background-color: var(--color, #ffffff);
-        border: 1px solid #444;
-      }
+    .tag-color {
+      min-width: 35px;
+      width: 35px;
+      min-height: 35px;
+      height: 35px;
+      border-radius: 4px;
+      background-color: var(--color, #ffffff);
+      border: 1px solid #444;
+    }
   }
 }
 </style>
