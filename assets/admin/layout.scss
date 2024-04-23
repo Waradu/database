@@ -176,6 +176,9 @@
       color: #ffffffbb;
       transition: 0.2s ease-in-out;
       cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
 
       &:hover {
         border: 1px solid #ffffff30;
@@ -238,5 +241,36 @@
   .main {
     grid-column: 2 / 3;
     grid-row: 2 / 3;
+  }
+}
+
+@media (max-width: 1000px) {
+  .admin {
+    grid-template-columns: 50px calc(100% - 50px);
+    .sidebar {
+      overflow: hidden;
+
+      h1 {
+        display: none;
+      }
+
+      .tabs {
+        .tab {
+          padding-inline: 0;
+          justify-content: center;
+          .text {
+            display: none;
+          }
+        }
+      }
+      button {
+        margin: 5px;
+        padding-inline: 0;
+
+        .text {
+          display: none;
+        }
+      }
+    }
   }
 }

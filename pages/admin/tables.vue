@@ -75,6 +75,10 @@
             <Iconsax :name="selected.icon" size="20" />
           </div>
         </div>
+        <div class="input-sel">
+          <p>Tags:</p>
+          <TagSelector v-model="selected.tags" :tags="availableTags" :size="parseInt('3')" />
+        </div>
         <div class="checkbox locked">
           <label for="locked">Locked:</label>
           <label class="switch">
@@ -87,7 +91,6 @@
             <span class="slider"></span>
           </label>
         </div>
-        <TagSelector v-model="selected.tags" :tags="availableTags" />
         <div class="space"></div>
         <div class="error">{{ error_message }}</div>
         <button class="save" type="submit">Save</button>
@@ -99,9 +102,7 @@
 <script lang="ts" setup>
 import type { Database, Tables } from "~/types/database.types";
 
-
 const databaseStore = useDatabaseStore();
-const selectedTags = ref(databaseStore.getTableTags("1"));
 const availableTags = ref(Object.values(databaseStore.getTags()));
 const error_message = ref("");
 const term = ref("");
@@ -112,7 +113,7 @@ const selected = ref({
   name: "",
   icon: "",
   locked: false,
-  tags: [] as Tables<'tags'>[]
+  tags: [] as Tables<"tags">[],
 });
 
 function reset() {
@@ -122,7 +123,7 @@ function reset() {
       name: "",
       icon: "",
       locked: false,
-      tags: []
+      tags: [],
     };
   }, 200);
 }
@@ -136,7 +137,9 @@ function edit(table_id: number) {
   selected.value.name = table.name;
   selected.value.icon = table.icon;
   selected.value.locked = table.locked;
-  selected.value.tags = Object.values(databaseStore.getTableTags(table_id.toString()))
+  selected.value.tags = Object.values(
+    databaseStore.getTableTags(table_id.toString())
+  );
 }
 
 async function delete_item(table_id: number) {
@@ -149,7 +152,6 @@ async function delete_item(table_id: number) {
       .eq("id", table_id);
 
     if (error) {
-      console.log(error);
       error_message.value = error.message;
       return;
     }
@@ -172,7 +174,6 @@ async function save() {
     });
 
     if (error) {
-      console.log(error);
       error_message.value = error.message;
       reset();
       return;
@@ -195,7 +196,6 @@ async function save() {
     })
     .eq("id", selected.value.id);
   if (error) {
-    console.log(error);
     error_message.value = error.message;
     reset();
     return;
@@ -234,6 +234,7 @@ definePageMeta({
       display: flex;
       gap: 10px;
       align-items: center;
+      overflow: hidden;
     }
 
     .tag-color {

@@ -9,7 +9,10 @@
         </div>
       </div>
       <div class="space"></div>
-      <button class="logout" @click="logout">Logout</button>
+      <button class="logout" @click="logout">
+        <Iconsax name="LogoutCurve" size="18" />
+        <div class="text">Logout</div>
+      </button>
     </div>
     <header>
       <input type="text" name="" id="" placeholder="Search" @input="searchAction(term)" v-model="term" />
@@ -86,13 +89,11 @@ function home() {
 }
 
 const createAction = ref(() => {
-  console.error('Call error');
 });
 
 provide('createAction', createAction);
 
 const searchAction = ref((term: string) => {
-  console.error('Call error');
 });
 
 provide('searchAction', searchAction);

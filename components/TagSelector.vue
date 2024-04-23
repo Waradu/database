@@ -1,7 +1,7 @@
 <template>
   <div class="tag-selector" :class="{ open: open }" @click="open = !open">
     <div class="selected">
-      <div class="tags" v-for="tag in internalSelected.slice(0, size).reverse()">
+      <div class="tags" v-for="tag in internalSelected.slice(0, size)">
         <div
           class="tag"
           :style="{
@@ -25,7 +25,7 @@
       />
     </div>
     <div class="selector" @click.stop>
-      <label class="label" v-for="tag in tags" :key="tag.id">
+      <label class="sel-label" v-for="tag in tags" :key="tag.id">
         <input
           type="checkbox"
           :value="tag"
@@ -67,6 +67,20 @@ watchEffect(() => {
 const handleCheckboxChange = () => {
   emits("update:modelValue", internalSelected.value);
 };
+
+const handleClickOutside = (event) => {
+  if (!event.target.closest('.selector')) {
+    open.value = false;
+  }
+}
+
+onMounted(() => {
+  document.addEventListener('click', handleClickOutside);
+});
+
+onUnmounted(() => {
+  document.removeEventListener('click', handleClickOutside);
+});
 </script>
 
 <style lang="scss">
@@ -75,8 +89,8 @@ const handleCheckboxChange = () => {
   width: 100%;
   background-color: #0c0c0c;
   padding-inline: 10px;
-  min-height: 46px;
-  height: 46px;
+  min-height: 40px;
+  height: 40px;
   outline: none;
   display: flex;
   align-items: center;
@@ -84,6 +98,7 @@ const handleCheckboxChange = () => {
   border: 1px solid #282828;
   color: #ffffffbb;
   transition: 0.2s ease-in-out;
+  user-select: none;
 
   &:not(:has(.selector:hover)):hover {
     border: 1px solid #2f2f2f;
@@ -93,6 +108,12 @@ const handleCheckboxChange = () => {
 
   .count {
     white-space: nowrap;
+    font-size: 14px;
+    color: #ffffffbb;
+  }
+
+  .arrow {
+    min-width: 16px;
   }
 
   .selected {
@@ -113,7 +134,7 @@ const handleCheckboxChange = () => {
         padding: 4px;
         height: max-content;
         padding-inline: 10px;
-        font-size: 12px;
+        font-size: 10px;
         background-color: var(--color, #ffffff60);
         color: white;
         border-radius: 20px;
@@ -127,6 +148,7 @@ const handleCheckboxChange = () => {
   }
 
   .selector {
+    z-index: 100;
     position: absolute;
     opacity: 0;
     height: 0;
@@ -135,7 +157,7 @@ const handleCheckboxChange = () => {
     pointer-events: none;
     display: flex;
     flex-direction: column;
-    top: 50px;
+    top: 45px;
     background-color: #0c0c0c;
     outline: none;
     border-radius: 4px;
@@ -149,9 +171,11 @@ const handleCheckboxChange = () => {
       width: 0px;
     }
 
-    .label {
+    .sel-label {
       width: 100%;
       padding: 10px;
+      display: flex;
+      gap: 10px;
       border-top: 1px solid #ffffff00;
       border-bottom: 1px solid #ffffff00;
 

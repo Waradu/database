@@ -128,7 +128,6 @@ async function delete_item(tag_id: number) {
       .eq("id", tag_id);
 
     if (error) {
-      console.log(error);
       error_message.value = error.message;
       return;
     }
@@ -150,7 +149,6 @@ async function save() {
     });
 
     if (error) {
-      console.log(error);
       error_message.value = error.message;
       reset();
       return;
@@ -169,7 +167,6 @@ async function save() {
     .update({ name: selected_tag.value.name, color: selected_tag.value.color })
     .eq("id", selected_tag.value.id);
   if (error) {
-    console.log(error);
     error_message.value = error.message;
     reset();
     return;

@@ -30,7 +30,6 @@ function loadIcon(iconName: string) {
   icon.value = defineAsyncComponent(
     () => import(`./icons/${iconName}.vue`)
       .catch((error) => {
-        console.error(`Failed to load icon ${iconName}:`, error);
         return import('./icons/CloseCircle.vue');
       })
   );
