@@ -77,7 +77,11 @@
         </div>
         <div class="input-sel">
           <p>Tags:</p>
-          <TagSelector v-model="selected.tags" :tags="availableTags" :size="parseInt('3')" />
+          <TagSelector
+            v-model="selected.tags"
+            :tags="availableTags"
+            :size="parseInt('3')"
+          />
         </div>
         <div class="checkbox locked">
           <label for="locked">Locked:</label>
@@ -179,6 +183,8 @@ async function save() {
       return;
     }
 
+    await saveTags()
+
     await databaseStore.setTables();
     tables.value = databaseStore.getTables();
 
@@ -201,9 +207,32 @@ async function save() {
     return;
   }
 
+  await saveTags()
+
   await databaseStore.setTables();
   tables.value = databaseStore.getTables();
   reset();
+}
+
+async function saveTags() {
+  const { data, error } = await supabase
+    .from("table_tag")
+    .delete()
+    .eq("table_id", selected.value.id);
+  if (error) {
+    error_message.value = error.message;
+    reset();
+    return;
+  }
+
+  selected.value.tags.forEach(async (tag) => {
+    const { data, error } = await supabase
+      .from("table_tag")
+      .insert({
+        table_id: selected.value.id,
+        tag_id: tag.id,
+      })
+  });
 }
 
 const createAction = inject("createAction") as Ref<() => void>;
