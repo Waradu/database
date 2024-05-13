@@ -1,16 +1,12 @@
 import type { Tables } from "~/types/database.types";
 
-export interface RowExtend {
-  blocks: Block[];
-}
-
 export interface DatabaseStore {
   fetched: boolean;
-  tables: Record<string, Tables<"tables">>;
-  rows: Record<string, Tables<"rows"> & RowExtend>;
-  tags: Record<string, Tables<"tags">>;
-  row_tag: Record<string, Tables<"row_tag">>;
-  table_tag: Record<string, Tables<"table_tag">>;
+  tables: Tables<"tables">[];
+  rows: Tables<"rows">[];
+  tags: Tables<"tags">[];
+  row_tag: Tables<"row_tag">[];
+  table_tag: Tables<"table_tag">[];
 }
 
 export interface DataTable {
@@ -92,3 +88,17 @@ export type Block =
   | { type: "embed"; data: EmbedBlock }
   | { type: "seperator"; data: null }
   | { type: "image"; data: ImageBlock };
+
+export type ToastType = "success" | "error" | "info";
+
+export interface Toast {
+  id: number;
+  type: ToastType;
+  title: string;
+  message: string;
+}
+
+export interface Toasts {
+  index: number;
+  toasts: Toast[];
+}

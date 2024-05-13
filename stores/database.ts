@@ -1,29 +1,23 @@
-import type { Database, Tables } from "~/types/database.types";
-import type { Block, DataTable, DatabaseStore, RowExtend } from "~/types/types";
+import type { Database, Tables, TablesUpdate } from "~/types/database.types";
+import type { DatabaseStore } from "~/types/types";
 import { SupabaseClient } from "@supabase/supabase-js";
 
 export const useDatabaseStore = defineStore("databaseStore", {
   state: () =>
     ({
       fetched: false,
-      tables: {},
-      rows: {},
-      tags: {},
-      row_tag: {},
-      table_tag: {},
+      tables: [],
+      rows: [],
+      tags: [],
+      row_tag: [],
+      table_tag: [],
     } as DatabaseStore),
 
   actions: {
     async fetchData() {
       if (this.fetched) return;
 
-      const supabase: SupabaseClient<Database> = useSupabaseClient<Database>();
-
-      await Promise.all([
-        this.setTables(),
-        this.setRows(),
-        this.setTags(),
-      ]);
+      await Promise.all([this.setTables(), this.setRows(), this.setTags()]);
 
       this.fetched = true;
     },
@@ -31,21 +25,14 @@ export const useDatabaseStore = defineStore("databaseStore", {
       const supabase: SupabaseClient<Database> = useSupabaseClient<Database>();
 
       const [tables, table_tag] = await Promise.all([
-        supabase.from("tables").select("*").returns<Tables<"tables">[]>(),
-        supabase.from("table_tag").select("*").returns<Tables<"table_tag">[]>(),
+        supabase.from("tables").select("*").order("id").returns<Tables<"tables">[]>(),
+        supabase.from("table_tag").select("*").order("id").returns<Tables<"table_tag">[]>(),
       ]);
 
-      if (!tables.data) return;
+      if (!tables.data || !table_tag.data) return;
 
-      tables.data.forEach((table) => {
-        this.tables[table.id] = table;
-      });
-
-      if (table_tag.data) {
-        table_tag.data.forEach((tag) => {
-          this.table_tag[tag.id] = tag;
-        });
-      }
+      this.tables = tables.data;
+      this.table_tag = table_tag.data;
     },
     async setRows() {
       const supabase: SupabaseClient<Database> = useSupabaseClient<Database>();
@@ -56,21 +43,13 @@ export const useDatabaseStore = defineStore("databaseStore", {
           .select("*")
           .order("pos", { ascending: true })
           .returns<Tables<"rows">[]>(),
-        supabase.from("row_tag").select("*").returns<Tables<"row_tag">[]>(),
+        supabase.from("row_tag").select("*").order("id").returns<Tables<"row_tag">[]>(),
       ]);
 
-      if (!rows.data) return;
+      if (!rows.data || !row_tag.data) return;
 
-      rows.data.forEach((row, index) => {
-        this.rows[row.id] = row as Tables<"rows"> & RowExtend;
-        this.rows[row.id].blocks = [];
-      });
-
-      if (row_tag.data) {
-        row_tag.data.forEach((tag) => {
-          this.row_tag[tag.id] = tag;
-        });
-      }
+      this.rows = rows.data;
+      this.row_tag = row_tag.data;
     },
     async setTags() {
       const supabase: SupabaseClient<Database> = useSupabaseClient<Database>();
@@ -78,72 +57,43 @@ export const useDatabaseStore = defineStore("databaseStore", {
       const tags = await supabase
         .from("tags")
         .select("*")
+        .order("id")
         .returns<Tables<"tags">[]>();
 
       if (!tags.data) return;
 
-      this.tags = {}
-
-      tags.data.forEach((tag) => {
-        this.tags[tag.id] = tag;
-      });
+      this.tags = tags.data;
     },
-    getTags() {
-      return this.tags;
-    },
-    getTag(tagId: string) {
-      if (!this.tags[tagId]) return;
-      return this.tags[tagId];
-    },
-    getTables() {
+    getTables(): Tables<"tables">[] {
       return this.tables;
     },
-    getTable(tableId: string) {
-      if (!this.tables[tableId]) return;
-      return this.tables[tableId];
+    getRows(): Tables<"rows">[] {
+      return this.rows;
     },
-    getTableTags(tableId: string) {
-      const associatedTags = Object.values(this.table_tag)
-        .filter((tt) => tt.table_id === parseInt(tableId))
-        .map((tt) => this.tags[tt.tag_id]);
-      return associatedTags;
+    getTags(): Tables<"tags">[] {
+      return this.tags;
     },
-    getTableRows(tableId: string) {
-      const associatedRows = Object.values(this.rows).filter(
-        (row) => row.table_id === parseInt(tableId)
-      );
-      return associatedRows;
+    getTable(id: number): Tables<"tables"> | undefined {
+      return this.tables.find(table => table.id === id);
     },
-    getRowTags(rowId: string) {
-      const tagIds = Object.values(this.row_tag).filter(
-        (rt) => rt.row_id === parseInt(rowId)
-      );
-      return tagIds.map((rt) => this.tags[rt.tag_id]);
+    getRow(id: number): Tables<"rows"> | undefined {
+      return this.rows.find(row => row.id === id);
     },
-    getRow(rowId: string) {
-      if (!this.rows[rowId]) return;
-      return this.rows[rowId];
+    getTag(id: number): Tables<"tags"> | undefined {
+      return this.tags.find(tag => tag.id === id);
     },
-    async fetchRowContent(rowId: string) {
-      if (!this.rows[rowId]) return [] as Block[];
-
-      if (this.rows[rowId].blocks.length > 0) return this.rows[rowId].blocks;
-
-      const supabase = useSupabaseClient<Database>();
-
-      const article = await supabase
-        .from("data")
-        .select("*")
-        .eq("row_id", rowId)
-        .returns<DataTable[]>()
-        .single();
-
-      if (!article.data) return [] as Block[];
-      if (!article.data.content) return [] as Block[];
-
-      this.rows[rowId].blocks = article.data.content.blocks;
-
-      return this.rows[rowId].blocks;
+    getTableRows(table_id: number): Tables<"rows">[] | undefined {
+      return this.rows.filter(row => row.table_id === table_id);
+    },
+    getTableTags(table_id: number): Tables<"tags">[] | undefined {
+      const tagIds = this.table_tag.filter(tt => tt.table_id === table_id).map(tt => tt.tag_id);
+      if (!tagIds) return;
+      return this.tags.filter(tag => tagIds.includes(tag.id));
+    },
+    getRowTags(row_id: number): Tables<"tags">[] | undefined {
+      const tagIds = this.row_tag.filter(rt => rt.row_id === row_id).map(rt => rt.tag_id);
+      if (!tagIds) return;
+      return this.tags.filter(tag => tagIds.includes(tag.id));
     },
   },
 });

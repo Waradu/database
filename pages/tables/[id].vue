@@ -4,15 +4,27 @@
       <h1>
         <div class="header-wrapper">
           <NuxtLink class="link" to="/">
-            <Iconsax name="ArrowLeft" size="18" color="#ffffff80" thickness="3" />
+            <Iconsax
+              name="ArrowLeft"
+              size="18"
+              color="#ffffff80"
+              thickness="3"
+            />
           </NuxtLink>
           <Iconsax :name="table.icon" size="28" />
         </div>
         <div class="header-text">{{ table.name }}</div>
       </h1>
       <div class="tags">
-        <div v-for="tag in databaseStore.getTableTags(table.id.toString())" :key="tag.id" class="tag"
-          :style="{ '--color': tag.color + '50', '--full-color': tag.color + '80' }">
+        <div
+          v-for="tag in store.getTableTags(table.id)"
+          :key="tag.id"
+          class="tag"
+          :style="{
+            '--color': tag.color + '50',
+            '--full-color': tag.color + '80',
+          }"
+        >
           {{ tag.name }}
         </div>
       </div>
@@ -21,16 +33,25 @@
       <div class="search">
         <div class="searchbar">
           <Iconsax name="SearchNormal" size="18" color="#ffffff30" />
-          <input type="text" placeholder="Search Rows for Name or Tag" v-model="search">
+          <input
+            type="text"
+            placeholder="Search Rows for Name or Tag"
+            v-model="search"
+          />
         </div>
       </div>
-      <div class="content" v-if="filteredRows.length <= 0">
+      <div class="content" v-if="rows.length <= 0">
         <div class="data">
           <Iconsax name="CloseCircle" color="#ffffff30" size="18" />
           <div class="name">Nothing found</div>
         </div>
       </div>
-      <NuxtLink class="content" v-for="(row, index) in filteredRows" :key="row.id" :to="`/rows/${row.id}`">
+      <NuxtLink
+        class="content"
+        v-for="(row, index) in rows"
+        :key="row.id"
+        :to="`/rows/${row.id}`"
+      >
         <div class="data">
           <div class="number">{{ index + 1 }}.</div>
           <div class="name">{{ row.name }}</div>
@@ -38,8 +59,15 @@
         </div>
         <div class="info">
           <div class="tags">
-            <div v-for="tag in databaseStore.getRowTags(row.id.toString())" :key="tag.id" class="tag"
-              :style="{ '--color': tag.color + '50', '--full-color': tag.color + '80' }">
+            <div
+              v-for="tag in store.getRowTags(row.id)"
+              :key="tag.id"
+              class="tag"
+              :style="{
+                '--color': tag.color + '50',
+                '--full-color': tag.color + '80',
+              }"
+            >
               {{ tag.name }}
             </div>
           </div>
@@ -50,39 +78,78 @@
 </template>
 
 <script lang="ts" setup>
+const store = useDatabaseStore();
+const { $database } = useNuxtApp();
+
 const route = useRoute();
 const search = ref("");
-const databaseStore = useDatabaseStore();
 
-const tableId = computed(() => route.params.id as string);
+const id = computed(() => Number(route.params.id));
+
 const table = computed(() => {
-  const data = databaseStore.getTable(tableId.value)
-  if (!data) throw new Error('Table not found');
+  const data = store.getTable(id.value);
+
+  if (!data) {
+    throw createError({
+      statusCode: 404,
+      message: "Table not found",
+    });
+  }
+
   return data;
 });
-const filteredRows = computed(() => {
+
+const rows = computed(() => {
   const searchText = search.value.trim().toLowerCase();
+  const rows = store.getTableRows(id.value);
+
+  if (!rows) return [];
+
   if (!searchText) {
-    return databaseStore.getTableRows(tableId.value);
+    return rows;
   }
-  return databaseStore.getTableRows(tableId.value).filter(row =>
-    row.name.toLowerCase().includes(searchText) ||
-    databaseStore.getRowTags(row.id.toString()).some(tag => tag.name.toLowerCase().includes(searchText))
-  );
+
+  return rows.filter((row) => {
+    const inRowName = row.name.toLowerCase().includes(searchText);
+    const tags = store.getRowTags(row.id);
+
+    if (!tags) {
+      return inRowName;
+    }
+
+    const inTagName = tags.some((tag) =>
+      tag.name.toLowerCase().includes(searchText)
+    );
+
+    return inRowName || inTagName;
+  });
 });
 
 function formatDate(dateStr: string) {
-    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-    const date = new Date(dateStr);
-    const day = date.getDate();
-    const month = months[date.getMonth()];
-    const year = `'${date.getFullYear().toString().slice(2)}`;
+  const months = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+  const date = new Date(dateStr);
+  const day = date.getDate();
+  const month = months[date.getMonth()];
+  const year = `'${date.getFullYear().toString().slice(2)}`;
 
-    return `${month} ${day} ${year}`;
+  return `${month} ${day} ${year}`;
 }
 
 useHead({
-  title: `Table: ${table.value?.name || 'Loading...'}`
+  title: `Table: ${table.value?.name || "Loading..."}`,
 });
 </script>
 
