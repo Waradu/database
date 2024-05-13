@@ -77,7 +77,7 @@
         </div>
         <div class="input-sel">
           <p>Tags:</p>
-          <TagSelector
+          <TagSelect
             v-model="selected.tags"
             :tags="availableTags"
             :size="3"

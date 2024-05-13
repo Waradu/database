@@ -14,7 +14,11 @@
       </div>
       <div class="count">
         {{
-          internalSelected.length > 0 ? (internalSelected.length > size ? "+" + (internalSelected.length - size) : "") : 'No Tags selected'
+          internalSelected.length > 0
+            ? internalSelected.length > size
+              ? "+" + (internalSelected.length - size)
+              : ""
+            : "No Tags selected"
         }}
       </div>
       <div class="space"></div>
@@ -25,7 +29,14 @@
       />
     </div>
     <div class="selector" @click.stop>
-      <label class="sel-label" v-for="tag in tags" :key="tag.id">
+      <label
+        class="sel-label"
+        v-for="tag in tags"
+        :key="tag.id"
+        :style="{
+          '--color': tag.color,
+        }"
+      >
         <input
           type="checkbox"
           :value="tag"
@@ -39,15 +50,18 @@
 </template>
 
 <script lang="ts" setup>
+import type { PropType } from 'vue';
+import type { Tables } from '~/types/database.types';
+
 const open = ref(false);
 
 const props = defineProps({
   modelValue: {
-    type: Array,
+    type: Array as PropType<Tables<'tags'>[]>,
     default: () => [],
   },
   tags: {
-    type: Array,
+    type: Array as PropType<Tables<'tags'>[]>,
     default: () => [],
   },
   size: {
@@ -58,7 +72,7 @@ const props = defineProps({
 
 const emits = defineEmits(["update:modelValue"]);
 
-const internalSelected = ref([...props.modelValue]);
+const internalSelected = ref<Tables<'tags'>[]>([...props.modelValue]);
 
 watchEffect(() => {
   internalSelected.value = [...props.modelValue];
@@ -68,18 +82,18 @@ const handleCheckboxChange = () => {
   emits("update:modelValue", internalSelected.value);
 };
 
-const handleClickOutside = (event) => {
-  if (!event.target.closest('.selector')) {
+const handleClickOutside = (event: MouseEvent) => {
+  if (event.target && !(event.target as Element).closest(".tag-selector")) {
     open.value = false;
   }
-}
+};
 
 onMounted(() => {
-  document.addEventListener('mouseup', handleClickOutside);
+  document.addEventListener("mouseup", handleClickOutside);
 });
 
 onUnmounted(() => {
-  document.removeEventListener('mouseup', handleClickOutside);
+  document.removeEventListener("mouseup", handleClickOutside);
 });
 </script>
 
@@ -176,8 +190,49 @@ onUnmounted(() => {
       padding: 10px;
       display: flex;
       gap: 10px;
+      align-items: center;
       border-top: 1px solid #ffffff00;
       border-bottom: 1px solid #ffffff00;
+      color: #ffffffaa;
+      transition: .1s ease-in-out;
+
+      &:has(:checked) {
+        color: #ffffff;
+      }
+
+      input[type="checkbox"] {
+        appearance: none;
+        background-color: transparent;
+        margin: 0;
+        font: inherit;
+        color: currentColor;
+        width: 13px;
+        height: 13px;
+        border: 1px solid currentColor;
+        border-radius: 2px;
+        transform: translateY(-0.075em);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: .1s ease-in-out;
+
+        &::before {
+          content: "";
+          display: block;
+          width: calc(100% - 2px);
+          height: calc(100% - 2px);
+          scale: 0;
+          transition: .1s ease-in-out;
+          transform-origin: center center;
+          background-color: var(--color);
+        }
+
+        &:checked {
+          &::before {
+            scale: 1;
+          }
+        }
+      }
 
       &:hover {
         background-color: #ffffff07;
