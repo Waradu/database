@@ -2,7 +2,7 @@
   <div class="index page">
     <header>
       <h1>Waradu's Database</h1>
-      <p class="desc">I make tutorials (mostly programming) cuz why not. Huge thanks to myself for
+      <p class="desc">This is my personal blog where I share tutorials, mostly about programming. Huge thanks to myself for
         making this website.</p>
       <div class="link" v-if="show_portfolio">
         <NuxtLink to="https://waradu.dev" class="website" @click="updateHref">My Portfolio</NuxtLink>
