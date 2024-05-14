@@ -12,7 +12,7 @@
       </h1>
       <div class="tags">
         <div
-          v-for="tag in databaseStore.getRowTags(row.id.toString())"
+          v-for="tag in databaseStore.getRowTags(row.id)"
           :key="tag.id"
           class="tag"
           :style="{ '--color': tag.color + '50', '--full-color': tag.color + '80' }"
@@ -37,18 +37,28 @@ import "prismjs/components/prism-scss.min.js";
 import "prismjs/components/prism-markup-templating.min.js";
 import "prismjs/components/prism-javascript.min.js";
 import type { Block } from "~/types/types";
+const toast = useToastStore();
+const { $database } = useNuxtApp();
 
 const route = useRoute();
 const databaseStore = useDatabaseStore();
 
-const rowId = computed(() => route.params.id as string);
+const id = computed(() => Number(route.params.id));
 
 const row = computed(() => {
-  const data = databaseStore.getRow(rowId.value);
-  if (!data) throw new Error("Row not found");
+  const data = databaseStore.getRow(id.value);
+
+  if (!data) {
+    toast.error("Error", "Row not found");
+    throw createError({
+      statusCode: 404,
+      message: "Row not found",
+    });
+  }
+
   return data;
 });
-const content = ref([
+const content = ref<Block[]>([
   {
     type: "heading",
     data: {
@@ -59,7 +69,18 @@ const content = ref([
 ] as Block[]);
 
 onMounted(async () => {
-  content.value = await databaseStore.fetchRowContent(row.value.id.toString());
+  const data = await $database.fetchRowContent(row.value.id);
+
+  if (!data || data.length == 0) {
+    toast.error("Error", "Content not found");
+    throw createError({
+      statusCode: 404,
+      message: "Content not found",
+      unhandled: false
+    });
+  }
+
+  content.value = data;
 
   nextTick(() => {
     document.querySelectorAll("pre.highlight").forEach((element) => {

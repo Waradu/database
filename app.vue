@@ -3,11 +3,6 @@
     <NuxtPage />
   </NuxtLayout>
   <Toast />
-  <div class="buttons">
-    <button @click="toast.success('Test', 'This is a test toast')">Success</button>
-    <button @click="toast.error('Test', 'This is a test toast')">Error</button>
-    <button @click="toast.info('Test', 'This is a test toast')">Info</button>
-  </div>
 </template>
 
 <script lang="ts" setup>

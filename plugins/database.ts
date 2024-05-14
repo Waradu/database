@@ -6,7 +6,7 @@ export default defineNuxtPlugin((nuxtApp) => {
   const store = useDatabaseStore();
   
   const database = {
-    async fetchRowContent(rowId: string): Promise<Block[] | undefined> {
+    async fetchRowContent(rowId: number): Promise<Block[] | undefined> {
       const article = await supabase
         .from("data")
         .select("*")

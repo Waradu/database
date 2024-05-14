@@ -79,7 +79,7 @@
 
 <script lang="ts" setup>
 const store = useDatabaseStore();
-const { $database } = useNuxtApp();
+const toast = useToastStore();
 
 const route = useRoute();
 const search = ref("");
@@ -90,9 +90,11 @@ const table = computed(() => {
   const data = store.getTable(id.value);
 
   if (!data) {
+    toast.error("Error", "Table not found");
     throw createError({
       statusCode: 404,
       message: "Table not found",
+      unhandled: false
     });
   }
 

@@ -64,7 +64,6 @@
 
 <script lang="ts" setup>
 const store = useDatabaseStore();
-const { $database } = useNuxtApp();
 
 const search = ref("");
 const show_portfolio = ref(true);

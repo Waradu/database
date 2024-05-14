@@ -18,6 +18,11 @@ export const useToastStore = defineStore("toastStore", {
         title: title,
         message: message,
       };
+
+      setTimeout(function () {
+        this.remove(toast.id);
+      }.bind(this), 6000);
+
       this.toasts.push(toast);
     },
     success(title: string, message: string) {

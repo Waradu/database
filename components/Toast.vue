@@ -17,6 +17,10 @@
 
 <script lang="ts" setup>
 const store = useToastStore();
+
+function getIcon(type: string) {
+  return store.getIcon(type);
+}
 </script>
 
 <style lang="scss">
