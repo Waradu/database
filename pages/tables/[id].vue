@@ -43,7 +43,7 @@
       <div class="content" v-if="rows.length <= 0">
         <div class="data">
           <Iconsax name="CloseCircle" color="#ffffff30" size="18" />
-          <div class="name">Nothing found</div>
+          <div class="name">{{ store.loading ? 'Loading...' : 'Nothing found' }}</div>
         </div>
       </div>
       <NuxtLink
@@ -90,12 +90,18 @@ const id = computed(() => Number(route.params.id));
 const table = computed(() => {
   const data = store.getTable(id.value);
 
-  if (!data) {
-    toast.error("Error", "Table not found");
+  if (!data && store.loading) {
+    return {
+      icon: "",
+      id: 0,
+      locked: false,
+      name: "Loading",
+    };
+  } else if (!data) {
+    toast.error("Error", "Row not found");
     throw createError({
       statusCode: 404,
-      message: "Table not found",
-      unhandled: false
+      message: "Row not found",
     });
   }
 
@@ -107,6 +113,8 @@ const rows = computed(() => {
   const rows = store.getTableRows(id.value);
 
   if (!rows) return [];
+
+  rows.sort((a, b) => a.pos - b.pos);
 
   if (!searchText) {
     return rows;

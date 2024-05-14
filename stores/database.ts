@@ -6,6 +6,7 @@ export const useDatabaseStore = defineStore("databaseStore", {
   state: () =>
     ({
       fetched: false,
+      loading: true,
       tables: [],
       rows: [],
       tags: [],
@@ -16,40 +17,73 @@ export const useDatabaseStore = defineStore("databaseStore", {
   actions: {
     async fetchData() {
       if (this.fetched) return;
-
-      await Promise.all([this.setTables(), this.setRows(), this.setTags()]);
-
       this.fetched = true;
+
+      const now = Date.now();
+
+      await Promise.all([
+        this.setTableTags(),
+        this.setRowTags(),
+        this.setTables(),
+        this.setRows(),
+        this.setTags(),
+      ]);
+
+      this.loading = false;
+
+      console.log("Took: " + (Date.now() - now) + "ms");
+    },
+    async setTableTags() {
+      const supabase: SupabaseClient<Database> = useSupabaseClient<Database>();
+
+      const table_tag = await supabase
+        .from("table_tag")
+        .select("*")
+        .order("id")
+        .returns<Tables<"table_tag">[]>();
+
+      if (!table_tag.data) return;
+
+      this.table_tag = table_tag.data;
+    },
+    async setRowTags() {
+      const supabase: SupabaseClient<Database> = useSupabaseClient<Database>();
+
+      const row_tag = await supabase
+        .from("row_tag")
+        .select("*")
+        .order("id")
+        .returns<Tables<"row_tag">[]>();
+
+      if (!row_tag.data) return;
+
+      this.row_tag = row_tag.data;
     },
     async setTables() {
       const supabase: SupabaseClient<Database> = useSupabaseClient<Database>();
 
-      const [tables, table_tag] = await Promise.all([
-        supabase.from("tables").select("*").order("id").returns<Tables<"tables">[]>(),
-        supabase.from("table_tag").select("*").order("id").returns<Tables<"table_tag">[]>(),
-      ]);
+      const tables = await supabase
+        .from("tables")
+        .select("*")
+        .order("id")
+        .returns<Tables<"tables">[]>();
 
-      if (!tables.data || !table_tag.data) return;
+      if (!tables.data) return;
 
       this.tables = tables.data;
-      this.table_tag = table_tag.data;
     },
     async setRows() {
       const supabase: SupabaseClient<Database> = useSupabaseClient<Database>();
 
-      const [rows, row_tag] = await Promise.all([
-        supabase
-          .from("rows")
-          .select("*")
-          .order("id")
-          .returns<Tables<"rows">[]>(),
-        supabase.from("row_tag").select("*").order("id").returns<Tables<"row_tag">[]>(),
-      ]);
+      const rows = await supabase
+        .from("rows")
+        .select("*")
+        .order("id")
+        .returns<Tables<"rows">[]>();
 
-      if (!rows.data || !row_tag.data) return;
+      if (!rows.data) return;
 
       this.rows = rows.data;
-      this.row_tag = row_tag.data;
     },
     async setTags() {
       const supabase: SupabaseClient<Database> = useSupabaseClient<Database>();
@@ -74,26 +108,30 @@ export const useDatabaseStore = defineStore("databaseStore", {
       return this.tags;
     },
     getTable(id: number): Tables<"tables"> | undefined {
-      return this.tables.find(table => table.id === id);
+      return this.tables.find((table) => table.id === id);
     },
     getRow(id: number): Tables<"rows"> | undefined {
-      return this.rows.find(row => row.id === id);
+      return this.rows.find((row) => row.id === id);
     },
     getTag(id: number): Tables<"tags"> | undefined {
-      return this.tags.find(tag => tag.id === id);
+      return this.tags.find((tag) => tag.id === id);
     },
     getTableRows(table_id: number): Tables<"rows">[] | undefined {
-      return this.rows.filter(row => row.table_id === table_id);
+      return this.rows.filter((row) => row.table_id === table_id);
     },
     getTableTags(table_id: number): Tables<"tags">[] | undefined {
-      const tagIds = this.table_tag.filter(tt => tt.table_id === table_id).map(tt => tt.tag_id);
+      const tagIds = this.table_tag
+        .filter((tt) => tt.table_id === table_id)
+        .map((tt) => tt.tag_id);
       if (!tagIds) return;
-      return this.tags.filter(tag => tagIds.includes(tag.id));
+      return this.tags.filter((tag) => tagIds.includes(tag.id));
     },
     getRowTags(row_id: number): Tables<"tags">[] | undefined {
-      const tagIds = this.row_tag.filter(rt => rt.row_id === row_id).map(rt => rt.tag_id);
+      const tagIds = this.row_tag
+        .filter((rt) => rt.row_id === row_id)
+        .map((rt) => rt.tag_id);
       if (!tagIds) return;
-      return this.tags.filter(tag => tagIds.includes(tag.id));
+      return this.tags.filter((tag) => tagIds.includes(tag.id));
     },
   },
 });

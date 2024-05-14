@@ -7,7 +7,10 @@
 
 <script lang="ts" setup>
 const store = useDatabaseStore();
-await store.fetchData();
+
+onMounted(() => {
+  store.fetchData();
+});
 </script>
 
 <style lang="scss">

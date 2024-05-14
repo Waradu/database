@@ -20,16 +20,19 @@
       <div class="edit action" @click="edit(item.id)">
         <Iconsax name="Edit2" size="16" />
       </div>
-      <div class="delete action" @click="delete_item(item.id)">
-        <Iconsax name="Trash" size="16" />
+      <div class="delete action" @click="del(item.id)">
+        <Iconsax :name="confirm ? 'TickCircle' : 'Trash'" size="16" />
       </div>
     </div>
+    <AdminOverlay />
   </div>
 </template>
 
 <script lang="ts" setup>
 const store = useDatabaseStore();
+const toast = useToastStore();
 const { $database } = useNuxtApp();
+const confirm = ref(false);
 
 const props = defineProps({
   type: {
@@ -47,6 +50,9 @@ var delete_item = (id: Number) => {};
 
 const item: ComputedRef<any> = computed(() => {
   if (props.type === "tags") {
+    delete_item = async (id: Number): Promise<{ error: any; }> => {
+      return await $database.deleteTag(id);
+    };
     return store.getTag(props.id);
   } else if (props.type === "rows") {
     return store.getRow(props.id);
@@ -55,6 +61,17 @@ const item: ComputedRef<any> = computed(() => {
   }
   return;
 });
+
+function del(id: Number) {
+  if (confirm.value) {
+    delete_item(id)
+    confirm.value = false
+    toast.success("Success", `Deleted: <strong>${item.value.name}</strong>.`)
+  } else {
+    confirm.value = true
+    toast.info("Are you sure?", `Click again to delete.`)
+  }
+}
 </script>
 
 <style lang="scss">

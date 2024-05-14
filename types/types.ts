@@ -2,6 +2,7 @@ import type { Tables } from "~/types/database.types";
 
 export interface DatabaseStore {
   fetched: boolean;
+  loading: boolean;
   tables: Tables<"tables">[];
   rows: Tables<"rows">[];
   tags: Tables<"tags">[];
@@ -102,3 +103,5 @@ export interface Toasts {
   index: number;
   toasts: Toast[];
 }
+
+export type DatabaseData = "tags" | "tables" | "rows";

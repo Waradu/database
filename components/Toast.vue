@@ -4,12 +4,13 @@
       class="toast"
       v-for="toast in store.getToasts()"
       :key="toast.id"
+      @click="store.remove(toast.id)"
       :class="'type-' + toast.type"
     >
       <Iconsax size="26" class="icon" :name="store.getIcon(toast.type)" />
       <div class="text">
-        <div class="title">{{ toast.title }}</div>
-        <div class="message">{{ toast.message }}</div>
+        <div class="title" v-html="toast.title"></div>
+        <div class="message" v-html="toast.message"></div>
       </div>
     </div>
   </div>
@@ -17,10 +18,6 @@
 
 <script lang="ts" setup>
 const store = useToastStore();
-
-function getIcon(type: string) {
-  return store.getIcon(type);
-}
 </script>
 
 <style lang="scss">
@@ -32,6 +29,7 @@ function getIcon(type: string) {
   flex-direction: column;
   padding: 20px;
   z-index: 10000;
+  align-items: end;
 
   .toast {
     display: flex;
@@ -47,6 +45,7 @@ function getIcon(type: string) {
     overflow: hidden;
     transform-origin: center bottom;
     animation: toast 6s ease-in-out 1 forwards;
+    width: max-content;
 
     &.type-success {
       background-color: #1c2a1c;
@@ -92,6 +91,7 @@ function getIcon(type: string) {
       flex-direction: column;
       gap: 2px;
       width: 100%;
+      white-space: nowrap;
 
       .title {
         font-size: 18px;

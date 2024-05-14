@@ -4,7 +4,12 @@
       <h1>
         <div class="header-wrapper">
           <NuxtLink class="link" :to="'/tables/' + row.table_id">
-            <Iconsax name="ArrowLeft" size="18" color="#ffffff80" thickness="3" />
+            <Iconsax
+              name="ArrowLeft"
+              size="18"
+              color="#ffffff80"
+              thickness="3"
+            />
           </NuxtLink>
           <div class="number">{{ row.pos }}.</div>
         </div>
@@ -12,10 +17,13 @@
       </h1>
       <div class="tags">
         <div
-          v-for="tag in databaseStore.getRowTags(row.id)"
+          v-for="tag in store.getRowTags(row.id)"
           :key="tag.id"
           class="tag"
-          :style="{ '--color': tag.color + '50', '--full-color': tag.color + '80' }"
+          :style="{
+            '--color': tag.color + '50',
+            '--full-color': tag.color + '80',
+          }"
         >
           {{ tag.name }}
         </div>
@@ -41,14 +49,22 @@ const toast = useToastStore();
 const { $database } = useNuxtApp();
 
 const route = useRoute();
-const databaseStore = useDatabaseStore();
+const store = useDatabaseStore();
 
 const id = computed(() => Number(route.params.id));
 
 const row = computed(() => {
-  const data = databaseStore.getRow(id.value);
+  const data = store.getRow(id.value);
 
-  if (!data) {
+  if (!data && store.loading) {
+    return {
+      id: 0,
+      name: "Loading",
+      pos: 0,
+      publish_date: "",
+      table_id: 0,
+    };
+  } else if (!data) {
     toast.error("Error", "Row not found");
     throw createError({
       statusCode: 404,
@@ -58,26 +74,27 @@ const row = computed(() => {
 
   return data;
 });
+
 const content = ref<Block[]>([
   {
     type: "heading",
     data: {
       content: "Loading...",
-      size: 1
+      size: 1,
     },
   },
 ] as Block[]);
 
-onMounted(async () => {
-  const data = await $database.fetchRowContent(row.value.id);
+const fetchData = async (rowId: number) => {
+  const data = await $database.fetchRowContent(rowId);
 
-  if (!data || data.length == 0) {
-    toast.error("Error", "Content not found");
-    throw createError({
-      statusCode: 404,
-      message: "Content not found",
-      unhandled: false
-    });
+  if (!data) {
+    content.value = [];
+    return;
+  }
+
+  if (data.length === 0 && !store.loading) {
+    toast.info("This post is empty", "This might be on purpose as a placeholder");
   }
 
   content.value = data;
@@ -94,7 +111,16 @@ onMounted(async () => {
       Prism.highlightElement(element.children[0], false);
     });
   });
-});
+};
+
+watch(
+  () => row.value.id,
+  async (newId) => {
+    content.value = [];
+    await fetchData(newId);
+  },
+  { immediate: true }
+);
 
 useHead({
   title: `Row: ${row.value?.name || "Loading..."}`,

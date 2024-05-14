@@ -50,6 +50,8 @@
 </template>
 
 <script lang="ts" setup>
+import type { Database } from '~/types/database.types';
+
 const tabs = ref([
   { text: 'Overview', icon: 'Home2' },
   { text: 'Tables', icon: 'Grid7' },
@@ -62,7 +64,7 @@ const iframe = ref<HTMLIFrameElement>();
 const router = useRouter();
 const route = useRoute();
 const term = ref("")
-const supabase = useSupabaseClient();
+const supabase = useSupabaseClient<Database>();
 
 function setInitialActiveTab() {
   const path = route.path.toLowerCase();
@@ -108,6 +110,7 @@ function submit(event: Event) {
 }
 
 function logout() {
+  // @ts-ignore
   supabase.auth.signOut()
   navigateTo("/")
 }

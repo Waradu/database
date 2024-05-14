@@ -2,7 +2,7 @@
   header {
     display: grid;
     gap: 10px;
-    grid-template-columns: calc(100% - 150px) 140px;
+    grid-template-columns: calc(100% - 180px) 170px;
 
     h1 {
       grid-column: 1 / 2;
@@ -28,7 +28,7 @@
       .website {
         border-radius: 8px;
         padding: 6px;
-        padding-inline: 16px;
+        padding-inline: 24px;
         font-size: 14px;
         background-color: #ffffff20;
         border: 1px solid #ffffff20;
@@ -36,7 +36,7 @@
         color: white;
         cursor: pointer;
         transition: 0.2s ease-in-out;
-        width: 100%;
+        width: max-content;
         text-align: center;
 
         &:hover {

@@ -26,7 +26,7 @@
       <div class="content" v-if="tables.length <= 0">
         <div class="data">
           <Iconsax name="CloseCircle" size="18" />
-          <div class="name">Nothing found</div>
+          <div class="name">{{ store.loading ? 'Loading...' : 'Nothing found' }}</div>
         </div>
       </div>
       <NuxtLink
