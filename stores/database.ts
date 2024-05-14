@@ -41,7 +41,7 @@ export const useDatabaseStore = defineStore("databaseStore", {
         supabase
           .from("rows")
           .select("*")
-          .order("pos", { ascending: true })
+          .order("id")
           .returns<Tables<"rows">[]>(),
         supabase.from("row_tag").select("*").order("id").returns<Tables<"row_tag">[]>(),
       ]);
