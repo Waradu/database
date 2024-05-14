@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "build": "nuxt build",
-    "dev": "nuxt dev --host",
+    "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare"
@@ -15,11 +15,11 @@
     "nuxt": "^3.11.2",
     "pinia": "^2.1.7",
     "prismjs": "^1.29.0",
-    "sass": "^1.75.0",
     "vue": "^3.4.21",
     "vue-router": "^4.3.0"
   },
   "devDependencies": {
-    "@nuxtjs/supabase": "^1.2.0"
+    "@nuxtjs/supabase": "^1.2.0",
+    "sass": "^1.77.1"
   }
 }

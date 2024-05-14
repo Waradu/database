@@ -3,108 +3,6 @@
   height: 100%;
   padding: 40px;
 
-  .data-table {
-    width: 100%;
-    overflow: hidden;
-    overflow-y: auto;
-    max-height: 100%;
-    display: flex;
-    flex-direction: column;
-    border: 1px solid #ffffff20;
-    border-radius: 12px;
-    position: relative;
-
-    &::-webkit-scrollbar {
-      width: 0px;
-    }
-
-    .header {
-      border-bottom: 1px solid #ffffff20;
-      position: sticky;
-      top: 0;
-      background-color: #0c0c0c;
-    }
-
-    .data {
-      padding: 10px;
-      padding-left: 20px;
-      display: grid;
-      align-items: center;
-      transition: 0.2s ease-in-out;
-
-      &.header {
-        padding: 15px;
-        padding-left: 20px;
-      }
-
-      &:not(.header) {
-        height: 55px;
-        border-top: 1px solid #ffffff00;
-        border-bottom: 1px solid #ffffff00;
-      }
-
-      &:not(.header):hover {
-        background-color: #ffffff07;
-        border-top: 1px solid #ffffff07;
-        border-bottom: 1px solid #ffffff07;
-
-        &:nth-child(2) {
-          border-top: 1px solid #ffffff00;
-        }
-
-        &:last-child {
-          border-bottom: 1px solid #ffffff00;
-        }
-      }
-    }
-
-    .name {
-      width: calc(100% - 10px);
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-    }
-
-    .actions {
-      justify-self: end;
-      display: flex;
-      gap: 10px;
-
-      .action {
-        padding: 4px;
-        font-size: 12px;
-        border-radius: 8px;
-        padding-inline: 8px;
-        border: 1px solid #ffffff20;
-        color: #ffffffbb;
-        transition: 0.2s ease-in-out;
-        aspect-ratio: 1 / 1;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-
-        &.delete {
-          border: 1px solid #ff7f7f20;
-          background-color: #ff858505;
-          color: #ff8686bb;
-        }
-
-        &:hover {
-          border: 1px solid #ffffff30;
-          background-color: #ffffff10;
-          color: #ffffffff;
-
-          &.delete {
-            border: 1px solid #ff7f7f30;
-            background-color: #ff858520;
-            color: #ff8686ff;
-          }
-        }
-      }
-    }
-  }
-
   .overlay {
     position: fixed;
     right: 0;
@@ -262,5 +160,11 @@
         right: -20px;
       }
     }
+  }
+}
+
+@media (max-width: 600px) {
+  .admin-page {
+    padding: 0px;
   }
 }

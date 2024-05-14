@@ -55,7 +55,7 @@
         <div class="data">
           <div class="number">{{ index + 1 }}.</div>
           <div class="name">{{ row.name }}</div>
-          <div class="date">{{ formatDate(row.publish_date) }}</div>
+          <div class="date">{{ $database.formatDate(row.publish_date) }}</div>
         </div>
         <div class="info">
           <div class="tags">
@@ -80,6 +80,7 @@
 <script lang="ts" setup>
 const store = useDatabaseStore();
 const toast = useToastStore();
+const { $database } = useNuxtApp();
 
 const route = useRoute();
 const search = ref("");
@@ -126,29 +127,6 @@ const rows = computed(() => {
     return inRowName || inTagName;
   });
 });
-
-function formatDate(dateStr: string) {
-  const months = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
-  ];
-  const date = new Date(dateStr);
-  const day = date.getDate();
-  const month = months[date.getMonth()];
-  const year = `'${date.getFullYear().toString().slice(2)}`;
-
-  return `${month} ${day} ${year}`;
-}
 
 useHead({
   title: `Table: ${table.value?.name || "Loading..."}`,

@@ -1,6 +1,6 @@
 <template>
-  <div class="admin-page">
-    <AdminTable type="tags" />
+  <div class="admin_index">
+    Index
   </div>
 </template>
 
@@ -10,6 +10,6 @@ definePageMeta({
 })
 </script>
 
-<style lang="scss">
-/*  */
+<style>
+
 </style>

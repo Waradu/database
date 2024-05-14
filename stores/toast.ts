@@ -19,7 +19,7 @@ export const useToastStore = defineStore("toastStore", {
         message: message,
       };
 
-      setTimeout(function () {
+      setTimeout(function (this: any) {
         this.remove(toast.id);
       }.bind(this), 6000);
 

@@ -1,6 +1,6 @@
 <template>
-  <div class="admin_rows">
-    Rows
+  <div class="admin-page">
+    <AdminTable type="rows" />
   </div>
 </template>
 
@@ -10,6 +10,6 @@ definePageMeta({
 })
 </script>
 
-<style>
-
+<style lang="scss">
+/*  */
 </style>
