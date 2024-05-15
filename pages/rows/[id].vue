@@ -86,6 +86,7 @@ const content = ref<Block[]>([
 ] as Block[]);
 
 const fetchData = async (rowId: number) => {
+  if (rowId == 0) return;
   const data = await $database.fetchRowContent(rowId);
 
   if (!data) {
@@ -113,10 +114,11 @@ const fetchData = async (rowId: number) => {
   });
 };
 
+await fetchData(row.value.id)
+
 watch(
   () => row.value.id,
   async (newId) => {
-    content.value = [];
     await fetchData(newId);
   },
   { immediate: true }
