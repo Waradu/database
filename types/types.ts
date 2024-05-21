@@ -10,6 +10,8 @@ export interface DatabaseStore {
   table_tag: Tables<"table_tag">[];
 }
 
+export type AnyTable = Tables<"tables" | "rows" | "tags">;
+
 export interface DataTable {
   content: {
     blocks: Block[];
@@ -20,10 +22,6 @@ export interface DataTable {
 
 export interface TextBlock {
   content: string;
-  bold: boolean;
-  italic: boolean;
-  code: boolean;
-  link: string;
 }
 
 export interface ParagraphBlock {
@@ -105,3 +103,9 @@ export interface Toasts {
 }
 
 export type DatabaseData = "tags" | "tables" | "rows";
+
+export interface Overlay {
+  isOverlayVisible: boolean;
+  currentData: AnyTable | null;
+  currentType: DatabaseData;
+}

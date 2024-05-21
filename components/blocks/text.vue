@@ -1,13 +1,6 @@
 <template>
-  <component
-    :is="data.link != '' && data.code == false ? 'a' : 'span'"
-    class="text"
-    :target="data.link.startsWith('/') || !(data.link != '' && data.code == false)  ? '' : '_blank'"
-    :href="data.link"
-    :class="[{ bold: data.bold, italic: data.italic, code: data.code, link: data.link }]"
-  >
-    {{ data.content.trim() }}
-  </component>
+  <span class="text" v-html="data.content.trim()">
+  </span>
 </template>
 
 <script lang="ts">

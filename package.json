@@ -11,6 +11,12 @@
   },
   "dependencies": {
     "@pinia/nuxt": "^0.5.1",
+    "@tiptap/core": "^2.4.0",
+    "@tiptap/extension-bubble-menu": "^2.4.0",
+    "@tiptap/extension-link": "^2.4.0",
+    "@tiptap/extension-underline": "^2.4.0",
+    "@tiptap/starter-kit": "^2.4.0",
+    "@tiptap/vue-3": "^2.4.0",
     "@types/prismjs": "^1.26.3",
     "nuxt": "^3.11.2",
     "pinia": "^2.1.7",

@@ -50,18 +50,16 @@
 </template>
 
 <script lang="ts" setup>
-import type { PropType } from 'vue';
-import type { Tables } from '~/types/database.types';
+import type { PropType } from "vue";
+import type { Tables } from "~/types/database.types";
+
+const store = useDatabaseStore();
 
 const open = ref(false);
 
 const props = defineProps({
   modelValue: {
-    type: Array as PropType<Tables<'tags'>[]>,
-    default: () => [],
-  },
-  tags: {
-    type: Array as PropType<Tables<'tags'>[]>,
+    type: Array as PropType<Tables<"tags">[]>,
     default: () => [],
   },
   size: {
@@ -70,9 +68,11 @@ const props = defineProps({
   },
 });
 
+const tags = ref<Tables<"tags">[]>(store.getTags());
+
 const emits = defineEmits(["update:modelValue"]);
 
-const internalSelected = ref<Tables<'tags'>[]>([...props.modelValue]);
+const internalSelected = ref<Tables<"tags">[]>([...props.modelValue]);
 
 watchEffect(() => {
   internalSelected.value = [...props.modelValue];
@@ -194,7 +194,7 @@ onUnmounted(() => {
       border-top: 1px solid #ffffff00;
       border-bottom: 1px solid #ffffff00;
       color: #ffffffaa;
-      transition: .1s ease-in-out;
+      transition: 0.1s ease-in-out;
 
       &:has(:checked) {
         color: #ffffff;
@@ -214,7 +214,7 @@ onUnmounted(() => {
         display: flex;
         align-items: center;
         justify-content: center;
-        transition: .1s ease-in-out;
+        transition: 0.1s ease-in-out;
 
         &::before {
           content: "";
@@ -222,7 +222,7 @@ onUnmounted(() => {
           width: calc(100% - 2px);
           height: calc(100% - 2px);
           scale: 0;
-          transition: .1s ease-in-out;
+          transition: 0.1s ease-in-out;
           transform-origin: center center;
           background-color: var(--color);
         }
@@ -254,7 +254,9 @@ onUnmounted(() => {
     .selector {
       position: absolute;
       opacity: 1;
-      height: 200px;
+      min-height: 10px;
+      height: max-content;
+      max-height: 200px;
       pointer-events: all;
     }
   }

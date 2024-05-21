@@ -45,11 +45,14 @@ export default defineNuxtPlugin((nuxtApp) => {
     },
     async deleteTag(id: Number): Promise<{ error: any; }> {
       const { error } = await supabase.from("tags").delete().eq("id", id);
-      if (error) return error;
+      if (error) return { error: error };
       const { error: row_tag_error } = await supabase.from("row_tag").delete().eq("tag_id", id);
-      if (row_tag_error) return row_tag_error;
+      if (row_tag_error) return { error: row_tag_error };
       const { error: table_tag_error } = await supabase.from("table_tag").delete().eq("tag_id", id);
-      if (table_tag_error) return table_tag_error;
+      if (table_tag_error) return { error: table_tag_error };
+      await store.setTags();
+      await store.setTableTags();
+      await store.setRowTags();
       return { error: null };
     },
   };

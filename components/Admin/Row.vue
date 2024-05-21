@@ -17,26 +17,28 @@
       {{ $database.formatDate(item.publish_date) }}
     </div>
     <div class="actions">
-      <div class="edit action" @click="edit(item.id)">
+      <div class="edit action" @click="overlay.showOverlay(type, item)">
         <Iconsax name="Edit2" size="16" />
       </div>
       <div class="delete action" @click="del(item.id)">
         <Iconsax :name="confirm ? 'TickCircle' : 'Trash'" size="16" />
       </div>
     </div>
-    <AdminOverlay />
   </div>
 </template>
 
 <script lang="ts" setup>
+import type { AnyTable, DatabaseData } from '~/types/types';
+
 const store = useDatabaseStore();
 const toast = useToastStore();
+const overlay = useOverlayStore()
 const { $database } = useNuxtApp();
 const confirm = ref(false);
 
 const props = defineProps({
   type: {
-    type: String,
+    type: String as PropType<DatabaseData>,
     required: true,
   },
   id: {
@@ -45,12 +47,13 @@ const props = defineProps({
   },
 });
 
-var edit = (id: Number) => {};
-var delete_item = (id: Number) => {};
+var delete_item = async (id: Number): Promise<{ error: any }> => {
+  return { error: "not implemented" };
+};
 
 const item: ComputedRef<any> = computed(() => {
   if (props.type === "tags") {
-    delete_item = async (id: Number): Promise<{ error: any; }> => {
+    delete_item = async (id: Number): Promise<{ error: any }> => {
       return await $database.deleteTag(id);
     };
     return store.getTag(props.id);
@@ -62,14 +65,18 @@ const item: ComputedRef<any> = computed(() => {
   return;
 });
 
-function del(id: Number) {
+async function del(id: Number) {
   if (confirm.value) {
-    delete_item(id)
-    confirm.value = false
-    toast.success("Success", `Deleted: <strong>${item.value.name}</strong>.`)
+    var name = item.value.name;
+    const res = await delete_item(id);
+    if (res.error) {
+      toast.error("Error", res.error.message);
+    }
+    confirm.value = false;
+    toast.success("Success", `Deleted: <strong>${name}</strong>.`);
   } else {
-    confirm.value = true
-    toast.info("Are you sure?", `Click again to delete.`)
+    confirm.value = true;
+    toast.info("Are you sure?", `Click again to delete.`);
   }
 }
 </script>

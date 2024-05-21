@@ -94,10 +94,6 @@ const fetchData = async (rowId: number) => {
     return;
   }
 
-  if (data.length === 0 && !store.loading) {
-    toast.info("This post is empty", "This might be on purpose as a placeholder");
-  }
-
   content.value = data;
 
   nextTick(() => {
@@ -114,12 +110,19 @@ const fetchData = async (rowId: number) => {
   });
 };
 
-await fetchData(row.value.id)
+await fetchData(row.value.id);
 
 watch(
   () => row.value.id,
   async (newId) => {
     await fetchData(newId);
+
+    if (content.value.length === 0 && !store.loading) {
+      toast.info(
+        "This post is empty",
+        "This might be on purpose as a placeholder"
+      );
+    }
   },
   { immediate: true }
 );

@@ -46,6 +46,7 @@
         <iframe ref="iframe" src="/" frameborder="0" class="preview"></iframe>
       </div>
     </div>
+    <AdminOverlay />
   </div>
 </template>
 

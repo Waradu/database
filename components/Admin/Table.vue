@@ -18,11 +18,13 @@
 </template>
 
 <script lang="ts" setup>
+import type { DatabaseData } from '~/types/types';
+
 const store = useDatabaseStore();
 
 const props = defineProps({
   type: {
-    type: String,
+    type: String as PropType<DatabaseData>,
     required: true,
   },
 });

@@ -19,8 +19,6 @@ export const useDatabaseStore = defineStore("databaseStore", {
       if (this.fetched) return;
       this.fetched = true;
 
-      const now = Date.now();
-
       await Promise.all([
         this.setTableTags(),
         this.setRowTags(),
@@ -30,8 +28,6 @@ export const useDatabaseStore = defineStore("databaseStore", {
       ]);
 
       this.loading = false;
-
-      console.log("Took: " + (Date.now() - now) + "ms");
     },
     async setTableTags() {
       const supabase: SupabaseClient<Database> = useSupabaseClient<Database>();
@@ -119,18 +115,18 @@ export const useDatabaseStore = defineStore("databaseStore", {
     getTableRows(table_id: number): Tables<"rows">[] | undefined {
       return this.rows.filter((row) => row.table_id === table_id);
     },
-    getTableTags(table_id: number): Tables<"tags">[] | undefined {
+    getTableTags(table_id: number): Tables<"tags">[] {
       const tagIds = this.table_tag
         .filter((tt) => tt.table_id === table_id)
         .map((tt) => tt.tag_id);
-      if (!tagIds) return;
+      if (!tagIds) return [];
       return this.tags.filter((tag) => tagIds.includes(tag.id));
     },
-    getRowTags(row_id: number): Tables<"tags">[] | undefined {
+    getRowTags(row_id: number): Tables<"tags">[] {
       const tagIds = this.row_tag
         .filter((rt) => rt.row_id === row_id)
         .map((rt) => rt.tag_id);
-      if (!tagIds) return;
+      if (!tagIds) return [];
       return this.tags.filter((tag) => tagIds.includes(tag.id));
     },
   },
