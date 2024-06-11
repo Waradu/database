@@ -101,6 +101,13 @@
             <span class="slider"></span>
           </label>
         </div>
+        <button
+          @click="navigateTo(`/admin/row/${formData.id}`)"
+          class="edit"
+          type="button"
+        >
+          <Iconsax name="Edit2" size="16" /> Edit Content
+        </button>
         <div class="space"></div>
         <button class="save" type="submit">Save</button>
       </form>
@@ -170,7 +177,7 @@ const close = () => {
 const isPickerOpen = ref(false);
 
 const triggerDatePicker = () => {
-  const dateInput = document.getElementById('date') as HTMLInputElement;
+  const dateInput = document.getElementById("date") as HTMLInputElement;
   if (dateInput) {
     if (!isPickerOpen.value) {
       dateInput.showPicker();
@@ -183,13 +190,13 @@ const triggerDatePicker = () => {
 };
 
 onMounted(() => {
-  document.addEventListener('focusin', (event) => {
-    const dateInput = document.getElementById('date');
+  document.addEventListener("focusin", (event) => {
+    const dateInput = document.getElementById("date");
     if (event.target !== dateInput) {
       isPickerOpen.value = false;
     }
   });
-})
+});
 </script>
 
 <style lang="scss">
@@ -353,6 +360,30 @@ onMounted(() => {
             background-color: #121212;
             color: #ffffffff;
           }
+        }
+      }
+
+      .edit {
+        width: max-content;
+        padding: 10px;
+        margin-top: 10px;
+        padding-inline: 30px;
+        align-self: flex-end;
+        align-items: center;
+        display: flex;
+        gap: 10px;
+        border: 1px solid #6cc4ff30;
+        border-radius: 6px;
+        justify-content: center;
+        color: #81b8ffbb;
+        transition: 0.2s ease-in-out;
+        cursor: pointer;
+        background-color: #8fcdff20;
+
+        &:hover {
+          border: 1px solid #91defc30;
+          background-color: #8fc9ff30;
+          color: rgb(165, 219, 255);
         }
       }
 
